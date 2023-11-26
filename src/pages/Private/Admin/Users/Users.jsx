@@ -3,306 +3,480 @@ import profileImage from '../../../../../public/profile.png'
 import { BsEyeFill, BsTrashFill } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
 import { AdminLayout } from '../../../../components/Layouts'
+import { ButtonPrimary } from '../../../../components/Buttons'
+import { SearchInput } from '../../../../components/Inputs'
+import { PanelTitle } from '../../../../components/Texts'
 
 function Users () {
   return (
     <AdminLayout>
-      <div className='h-full lg:pt-3'>
+      <div className='flex flex-col gap-y-4 h-full'>
 
-        <div className='md:mb-5 flex flex-col'>
-          <h2 className='md:text-2xl font-bold flex lg:pb-2'>Users</h2>
+        <div className='flex flex-col gap-y-2'>
+          <PanelTitle text='Users' />
 
-          <div className='lg:flex lg:flex-row lg:justify-between lg:items-center'>
-            <div class='relative items-center justify-between'>
-              <div class='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none'>
-                <svg class='w-4 h-4 text-gray-500' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'>
-                  <path stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z' />
-                </svg>
-              </div>
-              <input type='text' id='table-search-users' className='flex w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg md:w-80 bg-gray-50  focus:border-blue-500' placeholder='Search for users' />
-            </div>
-
-            <div>
-              <button className='lg:px-6 lg:py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-500' type='button'>New</button>
-            </div>
+          <div className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'>
+            <SearchInput placeholder='Search users' />
+            <ButtonPrimary text='New' onClick={() => { }} />
           </div>
         </div>
 
-        <div className='bg-yellow-100 overflow-y-auto max-h-[400px] shadow-md rounded-lg border-solid border-2 border-indigo-600 no-scrollbar'>
-          <table className='w-full'>
+        <div className='overflow-y-auto max-h-[400px] shadow-md shadow-gray-500 rounded-lg'>
+          <table className='table-auto w-full'>
 
-            <thead className='bg-indigo-600 md:text-lg uppercase my-2 text-white sticky top-0  text-left'>
-              <tr>
-                <th scope='col' className='px-6 py-4'>name</th>
-                <th scope='col' className='px-6 py-4 hidden lg:inline-flex'>email</th>
-                <th scope='col' className='px-6 py-4'>phone</th>
-                <th scope='col' className='px-6 py-4'>option</th>
+            <thead className='sticky top-0 h-[50px]'>
+              <tr className='uppercase bg-biscay-700 text-white text-left'>
+                <th className='px-4 py-2'>id</th>
+                <th className='px-4 py-2 w-52 min-w-52'>name</th>
+                <th className='px-4 py-2'>email</th>
+                <th className='px-4 py-2'>phone</th>
+                <th className='px-4 py-2 text-center'>settings</th>
               </tr>
             </thead>
 
-            <tbody className='bg-gray-300'>
-
-              <tr className='bg-white border-b'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button className='mx-3 p-1 lg:rounded-full lg:hover:bg-indigo-600 lg:hover:text-white text-indigo-600'><BsEyeFill className='md:text-lg font-bold' /></button>
-                    <button className='mx-3 p-1 lg:rounded-full lg:hover:bg-indigo-600 lg:hover:text-white text-indigo-600'><AiFillEdit className='md:text-lg font-bold' /></button>
-                    <button className='mx-3 p-1 lg:rounded-full lg:hover:bg-indigo-600 lg:hover:text-white text-indigo-600'><BsTrashFill className='md:text-lg font-bold' /></button>
-                  </div>
+            <tbody className='bg-white h-[350px] max-h-[350px]'>
+              <tr>
+                <th>0</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Lorem Ipsum</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
-              <tr className='bg-white border-b hover:bg-indigo-200'>
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={profileImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 text-sm md:text-lg'>Willy last Romero Naula</p>
-                  </div>
-                </th>
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <a href={'mailto:' + 'lorem_ipsum@gmail.com'}>lorem_ipsum@gmail.com</a>
-                </td>
-                <td className='px-6 py-4'>(593) 0011223344</td>
-                <td className='px-6 py-4'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button><BsEyeFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><AiFillEdit className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                    <button><BsTrashFill className='md:text-lg mx-3 text-indigo-700 font-bold' /></button>
-                  </div>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
                 </td>
               </tr>
-
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td className='px-4 py-2 capitalize flex w-52 min-w-52'>lorem ipsum</td>
+                <td className='px-4 py-2'>lorem@gmail.com</td>
+                <td className='px-4 py-2'>0998989898</td>
+                <td className='flex flex-row items-center justify-center gap-x-4'>
+                  <BsEyeFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <AiFillEdit className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                  <BsTrashFill className='text-biscay-700 text-lg lg:hover:text-biscay-400 lg:hover:cursor-pointer' />
+                </td>
+              </tr>
             </tbody>
+
           </table>
         </div>
 
