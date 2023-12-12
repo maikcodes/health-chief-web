@@ -4,8 +4,8 @@ function SidebarClosed ({ handleOpen, options }) {
   const sidebarMenuIcon = options.sidebarHeader.icon
   const sidebarOptions = options.sidebarOptions.options
   return (
-    <div className='md:flex md:items-start md:w-[75px] p-1'>
-      <nav className='bg-biscay-700 md:flex md:rounded-2xl md:w-full p-1 md:p-4 sticky z-0 top-0 md:max-h-[545px] shadow-md shadow-gray-500'>
+    <div className='md:flex md:items-start md:w-[75px] px-1 py-2'>
+      <nav className='bg-biscay-700 md:flex md:rounded-2xl md:w-full p-1 md:p-4 sticky z-0 top-0 md:max-h-[520px] shadow-md shadow-gray-500'>
 
         <div className='md:flex md:flex-col w-full'>
           <ButtonPrimary icon={sidebarMenuIcon} onClick={handleOpen} />

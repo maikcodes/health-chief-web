@@ -2,8 +2,8 @@ import { IoSearch } from 'react-icons/io5'
 
 function SearchInput ({ placeholder }) {
   return (
-    <div class='relative items-center justify-between'>
-      <div class='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none'>
+    <div className='relative items-center justify-between'>
+      <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none'>
         <IoSearch />
       </div>
       <input

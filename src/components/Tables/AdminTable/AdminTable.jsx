@@ -1,16 +1,16 @@
-function AdminTable ({ tHead, children }) {
-  return (
-    <div className='bg-yellow-100 overflow-y-auto max-h-[400px] shadow-md rounded-lg border-solid border-2 border-indigo-600 no-scrollbar'>
-      <table className='w-full'>
-        <thead className='bg-indigo-600 md:text-lg uppercase my-2 text-white sticky top-0  text-left'>
-          {tHead}
-        </thead>
+import PaginationBar from '../PaginationBar'
+import React from 'react'
 
-        <tbody className='bg-gray-300'>
+function AdminTable ({ children, pagination }) {
+  return (
+    <>
+      <div className='overflow-y-auto max-h-[400px] shadow-md shadow-gray-500 rounded-lg'>
+        <table className='table-auto w-full'>
           {children}
-        </tbody>
-      </table>
-    </div>
+        </table>
+      </div>
+      <PaginationBar paginationObject={pagination} />
+    </>
   )
 }
 

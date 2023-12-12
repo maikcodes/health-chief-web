@@ -3,7 +3,7 @@ import userImage from '../../../../../public/profile.png'
 import { BsEyeFill, BsTrashFill } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
 import { AdminLayout } from '../../../../components/Layouts'
-import { AdminTable } from '../../../../components/Tables'
+// import { AdminTable } from '../../../../components/Tables'
 
 function Doctors () {
   return (
@@ -29,7 +29,7 @@ function Doctors () {
           </div>
         </div>
 
-        <AdminTable
+        {/* <AdminTable
           tHead={
             <tr>
               <th scope='col' className='px-6 py-4'>name</th>
@@ -63,7 +63,7 @@ function Doctors () {
             </td>
 
           </tr>
-        </AdminTable>
+        </AdminTable> */}
 
         <div class='flex items-center justify-between border-t border-gray-200 bg-white py-3'>
 

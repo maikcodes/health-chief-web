@@ -1,1 +1,2 @@
-export { default as AdminTable } from './AdminTable/AdminTable'
+export * from './AdminTable'
+export { default as PaginationBar } from './PaginationBar'

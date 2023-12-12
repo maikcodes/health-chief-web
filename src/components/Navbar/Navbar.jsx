@@ -1,4 +1,3 @@
-import userIcon from '../../../public/profile.png'
 import appIcon from '../../../public/app-icon.png'
 import { BiSolidDownArrow } from 'react-icons/bi'
 import { BsFillCalendarEventFill, BsFillChatDotsFill, BsFillBellFill } from 'react-icons/bs'
@@ -54,7 +53,7 @@ function Navbar () {
 
                 <div className='flex flex-row gap-1 items-center'>
                   <div className='w-8 h-8 md:w-12 md:h-12'>
-                    <img className='rounded-full object-cover' src={userIcon} alt='user profile icon' />
+                    <img className='rounded-full object-cover' src='https://thispersondoesnotexist.com/' alt='user profile icon' />
                   </div>
 
                   <BiSolidDownArrow className='md:leading-none md:text-xl' />

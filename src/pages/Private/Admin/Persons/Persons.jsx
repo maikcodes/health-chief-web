@@ -3,7 +3,7 @@ import userImage from '../../../../../public/profile.png'
 import { BsEyeFill, BsTrashFill } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
 import { AdminLayout } from '../../../../components/Layouts'
-import { AdminTable } from '../../../../components/Tables'
+// import { AdminTable } from '../../../../components/Tables'
 import { PersonService } from '../../../../services'
 
 function PersonsView () {
@@ -45,57 +45,6 @@ function PersonsView () {
             </div>
           </div>
         </div>
-
-        <AdminTable
-          tHead={
-            <tr>
-              <th scope='col' className='px-6 py-4'>name</th>
-              <th scope='col' className='px-6 py-4 hidden lg:inline-flex'>id card</th>
-              <th scope='col' className='px-6 py-4'>phone</th>
-              <th scope='col' className='px-6 py-4 hidden lg:inline-flex'>address</th>
-              <th scope='col' className='px-6 py-4'>option</th>
-            </tr>
-          }
-        >
-          {
-            persons.map((person, index) => (
-              <tr key={index} className='bg-white border-b'>
-
-                <th scope='row'>
-                  <div className='w-full flex items-center px-3 py-1'>
-                    <img src={userImage} alt='user image' className='h-12 w-12 rounded-full' />
-                    <p className='ml-4 capitalize break-words lg:max-w-[250px]'>{`${person.firstName} ${person.lastName}`}</p>
-                  </div>
-                </th>
-
-                <td className='px-6 py-4 hidden lg:inline-flex'>
-                  <p className='flex items-center h-full'>
-                    {person.idCard}
-                  </p>
-                </td>
-
-                <td className='px-6 py-4'>
-                  <p className='flex items-center h-full'>
-                    {person.phoneNumber}
-                  </p>
-                </td>
-
-                <td className='px-6 py-4 hidden lg:inline-flex break-words lg:max-w-[200px] ' title={person.address}>
-                  {person.address}
-                </td>
-
-                <td className='px-6'>
-                  <div className='flex flex-row items-center h-full'>
-                    <button className='mr-3 p-1 lg:rounded-full lg:hover:bg-indigo-600 lg:hover:text-white text-indigo-600'><BsEyeFill className='md:text-lg font-bold' /></button>
-                    <button className='mx-3 p-1 lg:rounded-full lg:hover:bg-indigo-600 lg:hover:text-white text-indigo-600'><AiFillEdit className='md:text-lg font-bold' /></button>
-                    <button className='ml-3 p-1 lg:rounded-full lg:hover:bg-indigo-600 lg:hover:text-white text-indigo-600'><BsTrashFill className='md:text-lg font-bold' /></button>
-                  </div>
-                </td>
-
-              </tr>
-            ))
-          }
-        </AdminTable>
 
         <div className='flex items-center justify-between border-t border-gray-200 bg-white py-3'>
 
