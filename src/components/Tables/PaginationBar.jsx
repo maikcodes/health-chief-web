@@ -1,95 +1,92 @@
-import { useEffect, useState } from 'react'
-
-// import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
+import UsePaginationIndices from '../../hooks/UsePaginationIndices'
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 
 function PaginationBar ({ paginationObject }) {
-  const [currentPage, setCurrentPage] = useState(1)
+  const { page, totalPages, results, totalResults, handlePageChange, limit, handleLimitChange } = paginationObject
+  const { paginationIndices, error } = UsePaginationIndices({ page, totalPages })
 
-  useEffect(() => {
-    setCurrentPage(paginationObject.page)
-  }, [currentPage])
-
-  // const renderPreviousPageButton = () => {
-  //   console.log(paginationObject.page)
-  //   if (paginationObject.page === 1) {
-  //     return <p className='disabled lg:hover:cursor-not-allowed px-2 py-1 bg-gray-300  rounded-lg flex items-center'><IoIosArrowBack /></p>
-  //   }
-  //   return <a href='/#' className='enabled px-2 py-1 bg-gray-300 lg:hover:bg-gray-400 rounded-lg flex items-center'><IoIosArrowBack /></a>
-  // }
-
-  // const renderNextPageButton = () => {
-  //   if (paginationObject.page === paginationObject.totalPages) {
-  //     return <p className='disabled lg:hover:cursor-not-allowed px-2 py-1 bg-gray-300  rounded-lg flex items-center'><IoIosArrowForward /></p>
-  //   }
-  //   return <a href='/#' className='enabled px-2 py-1 bg-gray-300 lg:hover:bg-gray-400 rounded-lg flex items-center'><IoIosArrowForward /></a>
-  // }
-
-  const handlePageChange = (newPage) => {
-    paginationObject.handlePageChange(newPage)
-    setCurrentPage(newPage)
+  const generateStartResults = () => {
+    if (page < totalPages) return (results * page) - results + 1
+    return totalResults - results + 1
   }
 
-  const renderPagination = () => {
-    const nearPages = 2
+  const generateEndResults = () => {
+    if (page < totalPages) return results * page
+    return totalResults
+  }
 
-    const pages = []
-    for (let i = Math.max(1, paginationObject.page - nearPages); i <= Math.min(paginationObject.totalPages, paginationObject.page + nearPages); i++) {
-      pages.push(
-        <button key={i} onClick={() => handlePageChange(i)} className='enabled px-2 py-1 bg-gray-300 lg:hover:bg-gray-400 rounded-lg flex items-center '>
-          {i}
-        </button>
-      )
+  const _handleLimitChange = (event) => {
+    const _limit = event.target.value
+    if (_limit > totalPages) {
+      handlePageChange(1)
+      handleLimitChange(_limit)
+    } else {
+      handleLimitChange(_limit)
     }
-
-    return (
-      <div className='flex flex-row justify-between w-full md:w-auto md:justify-normal gap-y-2 md:gap-x-2'>
-        {paginationObject.page > nearPages + 1 && (
-          <>
-            <button onClick={() => handlePageChange(1)}>1</button>
-            <span>...</span>
-          </>
-        )}
-        {pages}
-        {paginationObject.page < paginationObject.totalPages - nearPages && (
-          <>
-            <span>...</span>
-            <button onClick={() => handlePageChange(paginationObject.totalPages)}>{paginationObject.totalPages}</button>
-          </>
-        )}
-      </div>
-    )
   }
+
+  const handleNextPage = () => {
+    if (page !== totalPages) handlePageChange(page + 1)
+  }
+
+  const handlePreviousPage = () => {
+    if (page !== 1) handlePageChange(page - 1)
+  }
+
+  if (error) return (<p>Error</p>)
 
   return (
-    <div className='flex flex-col md:flex-row items-center justify-between gap-y-2 md:gap-y-0'>
-      <div className='text-gray-600'>
+    <div className='flex flex-col md:flex-row items-center lg:justify-between'>
+      <div className='text-gray-600 flex flex-row items-center gap-x-2'>
+        <p>Showing</p>
+        <span className='text-md font-bold'>{results}</span>
         <p>
-          Showing
-          <span className='text-md font-bold'> {paginationObject.results} ({paginationObject.totalResults - paginationObject.results} - {paginationObject.totalResults}) </span>
+          <span>({generateStartResults()} - {generateEndResults()}) </span>
           of
-          <span className='text-md font-bold'> {paginationObject.totalResults} </span>
+          <span className='text-md font-bold'> {totalResults} </span>
           results
         </p>
+        <select
+          id='results'
+          className='text-md bg-gray-300 mx-2 rounded-lg px-2 py-1'
+          defaultValue={limit}
+          onChange={_handleLimitChange}
+        >
+          <option className='bg-white' value='5'>5</option>
+          <option className='bg-white' value='10'>10</option>
+          <option className='bg-white' value='15'>15</option>
+          <option className='bg-white' value='20'>20</option>
+          <option className='bg-white' value='100'>100</option>
+        </select>
       </div>
       <div className='flex flex-col w-full md:w-auto md:flex-row items-center gap-y-2 gap-x-2 md:gap-y-2'>
-        {/* <div className='flex flex-row justify-between w-full md:w-auto md:justify-normal gap-y-2 md:gap-x-2'> */}
-        {/* {renderPreviousPageButton()}
-          <a href='/#' className='enabled px-2 py-1 bg-gray-300 lg:hover:bg-gray-400 rounded-lg flex items-center '>
-            {indexes.firstPosition}
-          </a>
-          <a href='/#' className='enabled px-2 py-1 bg-gray-300 lg:hover:bg-gray-400 rounded-lg flex items-center'>
-            {indexes.secondPosition}
-          </a>
-          <p className='px-2 py-1 rounded-lg'>...</p>
-          <a href='/#' className='enabled px-2 py-1 bg-gray-300 lg:hover:bg-gray-400 rounded-lg flex items-center'>
-            {indexes.thirdPosition}
-          </a>
-          <a href='/#' className='enabled px-2 py-1 bg-gray-300 lg:hover:bg-gray-400 rounded-lg flex items-center'>
-            {indexes.fourthPosition}
-          </a>
-          {renderNextPageButton()} */}
-        {renderPagination()}
-        {/* </div> */}
+        <button
+          className={`px-2 h-8 ${page === 1 ? 'lg:hover:cursor-not-allowed' : 'lg:hover:cursor-pointer lg:hover:bg-gray-400 shadow-md shadow-gray-500'} bg-gray-300 rounded-lg flex items-center text-gray-600`}
+          onClick={handlePreviousPage}
+        >
+          <IoIosArrowBack />
+        </button>
+        {
+          paginationIndices.map((pageIndex, index) => (
+            pageIndex === '...'
+              ? <div key={index} className='px-2 h-8 lg:hover:cursor-not-allowed flex items-center justify-center'><p>&hellip;</p></div>
+              : (
+                <button
+                  key={index}
+                  onClick={() => handlePageChange(pageIndex)}
+                  className={`px-2 h-8 ${pageIndex === page ? 'bg-gray-400' : 'bg-gray-300'} lg:hover:bg-gray-400 rounded-lg flex items-center shadow-md shadow-gray-500 text-gray-600`}
+                >
+                  {pageIndex}
+                </button>
+                )
+          ))
+        }
+        <button
+          className={`px-2 h-8 ${page === totalPages ? 'lg:hover:cursor-not-allowed' : 'lg:hover:cursor-pointer lg:hover:bg-gray-400 shadow-md shadow-gray-500'} bg-gray-300 rounded-lg flex items-center text-gray-600`}
+          onClick={handleNextPage}
+        >
+          <IoIosArrowForward />
+        </button>
       </div>
     </div>
   )

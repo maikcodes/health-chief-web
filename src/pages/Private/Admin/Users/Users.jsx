@@ -6,16 +6,11 @@ import { SearchInput } from '../../../../components/Inputs'
 import { UserServices } from '../../../../services/UserServices/UserServices'
 
 import useFetch from '../../../../hooks/UseFetch'
-import { useState } from 'react'
+import usePagination from '../../../../hooks/UsePagination'
 
 function Users () {
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(1)
+  const { page, limit, handleLimitChange, handlePageChange } = usePagination()
   const { data, error, loading } = useFetch({ fetchFunction: UserServices.getAll, page, limit })
-
-  const handlePageChange = (newPage) => {
-    setPage(newPage)
-  }
 
   return (
     <AdminLayout>
@@ -45,10 +40,12 @@ function Users () {
         {!error && !loading && data && (
           <AdminTable pagination={{
             handlePageChange,
+            handleLimitChange,
             page: data.page,
             totalPages: data.totalPages,
             results: data.results,
-            totalResults: data.totalResults
+            totalResults: data.totalResults,
+            limit
           }}
           >
             <TableHead>
