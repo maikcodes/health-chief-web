@@ -1,1 +1,4 @@
-export { default as ButtonPrimary } from './ButtonPrimary'
+export { default as BorderButton } from './BorderButton';
+export { default as ButtonPrimary } from './ButtonPrimary';
+export { default as ButtonSecondary } from './ButtonSecondary';
+export * from './index';
