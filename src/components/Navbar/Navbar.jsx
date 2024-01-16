@@ -1,4 +1,4 @@
-import appIcon from '../../../public/app-icon.png'
+import appIcon from '../../../public/favicon.svg'
 import { BiSolidDownArrow } from 'react-icons/bi'
 import { BsFillCalendarEventFill, BsFillChatDotsFill, BsFillBellFill } from 'react-icons/bs'
 
@@ -10,9 +10,9 @@ function Navbar () {
     >
       <nav className='flex flex-row justify-between'>
 
-        <div className='capitalize flex flex-row items-center md:w-3/12 lg:w-2/12 lg:pl-5'>
-          <div className='w-6 h-6 md:w-12 md:h-12'>
-            <img className='rounded-full object-cover' src={appIcon} />
+        <div className='capitalize flex flex-row items-center md:w-3/12 lg:w-2/12 lg:pl-5 gap-2'>
+          <div className='w-6 h-6 md:w-10 md:h-10'>
+            <img className='object-cover' src={appIcon} />
           </div>
           <h1 className='hidden md:block lg:px-3 lg:text-lg md:text-xl md:font-bold'>
             Health Chief
