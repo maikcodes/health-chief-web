@@ -1,3 +1,5 @@
 export * from './Auth'
-export * from './PersonService'
+export * from './PaginationIndices'
+export * from './PersonServices'
 export * from './UserServices'
+export * from './index'

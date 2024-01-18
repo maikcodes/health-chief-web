@@ -1,110 +1,357 @@
-import { useEffect, useState } from 'react'
-import userImage from '../../../../../public/profile.png'
-import { BsEyeFill, BsTrashFill } from 'react-icons/bs'
-import { AiFillEdit } from 'react-icons/ai'
 import { AdminLayout } from '../../../../components/Layouts'
-// import { AdminTable } from '../../../../components/Tables'
-import { PersonService } from '../../../../services'
+import { AdminTable, RowOptions, TableBody, TableHead } from '../../../../components/Tables'
+import { ButtonPrimary } from '../../../../components/Buttons'
+import { DisabledText, PanelTitle } from '../../../../components/Texts'
+import { Modal } from '@components/Dialogs'
+import { PersonServices } from '../../../../services'
+import { SearchInput, TextInput } from '../../../../components/Inputs'
 
-function PersonsView () {
-  const [persons, setPersons] = useState([])
+import { UseFetch, useModal, UsePagination } from '../../../../hooks'
+import { useState } from 'react'
 
-  useEffect(() => {
-    async function loadPersonList () {
-      try {
-        const persons = await PersonService.getAll()
-        console.log(persons)
-        setPersons(persons)
-      } catch (error) {
-        console.log(error)
-      }
-    }
+function Persons () {
+  const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
+  const { data, error, loading } = UseFetch({ fetchFunction: PersonServices.getAll, page, limit })
+  const [user, setUser] = useState({})
+  const createModal = useModal()
+  const viewModal = useModal()
+  const editModal = useModal()
+  const deleteModal = useModal()
 
-    loadPersonList()
-  }, [])
+  const handleEmptyModal = (modalOpenHandler) => {
+    setUser({
+      firstNames: '',
+      lastNames: '',
+      image: '',
+      email: '',
+      phone: ''
+    })
+    modalOpenHandler()
+  }
+
+  const handleOpenModal = (modalOpenHandler, id) => {
+    const users = data.data
+    const filteredUser = users.filter((_user) => _user.id === id)[0]
+    setUser(filteredUser)
+    modalOpenHandler()
+  }
+
+  const handleDataChange = (event) => {
+    const { name, value } = event.target
+    setUser({ ...user, [name]: value })
+  }
+
+  const handleCreate = () => {
+    console.log('creating user', JSON.stringify(user))
+  }
+
+  const handleEdit = () => {
+    console.log('editing user', JSON.stringify(user))
+  }
+
+  const handleDelete = () => {
+    console.log('deleting user', JSON.stringify(user))
+  }
 
   return (
     <AdminLayout>
-      <div className='h-full lg:pt-3'>
+      <div className='flex flex-col gap-y-2 h-full w-full'>
 
-        <div className='md:mb-5 flex flex-col'>
-          <h2 className='md:text-2xl font-bold flex lg:pb-2'>Persons</h2>
+        <div className='flex flex-col gap-y-2'>
+          <PanelTitle text='Persons' />
 
-          <div className='lg:flex lg:flex-row lg:justify-between lg:items-center'>
-            <div className='relative items-center justify-between'>
-              <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none'>
-                <svg className='w-4 h-4 text-gray-500' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'>
-                  <path stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z' />
-                </svg>
-              </div>
-              <input type='text' id='table-search-users' className='block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50  focus:border-blue-500' placeholder='Search for users' />
-            </div>
-
-            <div>
-              <button className='lg:px-6 lg:py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-500' type='button'>New</button>
-            </div>
+          <div className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'>
+            <SearchInput placeholder='Search users' />
+            <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
           </div>
         </div>
 
-        <div className='flex items-center justify-between border-t border-gray-200 bg-white py-3'>
-
-          <div className='flex flex-1 justify-between sm:hidden'>
-            <a href='#' className='relative inline-flex items-center rounded-md border border-gray-300 bg-white py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'>Previous</a>
-            <a href='#' className='relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'>Next</a>
+        {error && (
+          <div className='w-full h-full flex items-start justify-between'>
+            <p>Error</p>
           </div>
+        )}
 
-          <div className='lg:flex lg:flex-1 lg:items-center lg:justify-end'>
-
-            <div className='lg:mx-5'>
-              <div className='text-sm text-gray-700 lg:w-full flex flex-row justify-end'>
-                <p className='lg:mx-2'>
-                  Showing
-                </p>
-                <span className='font-medium'>1</span>
-                <p className='lg:mx-2'>
-                  to
-                </p>
-                <span className='font-medium'>10</span>
-                <p className='lg:mx-2'>
-                  of
-                </p>
-                <span className='font-medium'>97</span>
-                <p className='lg:mx-2'>
-                  results
-                </p>
-              </div>
-            </div>
-
-            <div>
-              <nav className='isolate inline-flex -space-x-px rounded-md shadow-sm' aria-label='Pagination'>
-                <a href='#' className='relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'>
-                  <span className='sr-only'>Previous</span>
-                  <svg className='h-5 w-5' viewBox='0 0 20 20' fill='currentColor' aria-hidden='true'>
-                    <path fillRule='evenodd' d='M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z' clipRule='evenodd' />
-                  </svg>
-                </a>
-                {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
-                <a href='#' aria-current='page' className='relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>1</a>
-                <a href='#' className='relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'>2</a>
-                <a href='#' className='relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex'>3</a>
-                <span className='relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0'>...</span>
-                <a href='#' className='relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex'>8</a>
-                <a href='#' className='relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'>9</a>
-                <a href='#' className='relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'>10</a>
-                <a href='#' className='relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'>
-                  <span className='sr-only'>Next</span>
-                  <svg className='h-5 w-5' viewBox='0 0 20 20' fill='currentColor' aria-hidden='true'>
-                    <path fillRule='evenodd' d='M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z' clipRule='evenodd' />
-                  </svg>
-                </a>
-              </nav>
-            </div>
+        {loading && (
+          <div className='w-full h-full flex items-start justify-between'>
+            <p>Loading Data</p>
           </div>
-        </div>
+        )}
 
+        {!error && !loading && data && (
+          <AdminTable pagination={{
+            handlePageChange,
+            handleLimitChange,
+            page: data.page,
+            totalPages: data.totalPages,
+            results: data.results,
+            totalResults: data.totalResults,
+            limit
+          }}
+          >
+            <TableHead>
+              <td className='px-4 py-2 text-center'>id</td>
+              <th className='px-4 py-2 w-72'>name</th>
+              <th className='px-4 py-2'>email</th>
+              <th className='px-4 py-2'>phone</th>
+              <th className='px-4 py-2 text-center'>settings</th>
+            </TableHead>
+            <TableBody>
+              {data.data?.map((user) => (
+                <tr
+                  key={user.id}
+                  className='lg:hover:bg-gray-300'
+                >
+                  <td className='px-4 py-2 font-bold text-center'>{user.id}</td>
+                  <td className='px-4 py-2 capitalize flex w-72 md:w-62 flex-row items-center gap-x-2'>
+                    <div className='w-12 h-12 rounded-full overflow-hidden border-2 border-biscay-600'>
+                      <img src={user.image} alt={`${user.firstNames} ${user.lastNames}`} />
+                    </div>
+                    <div className='flex flex-col'>
+                      <p className='font-bold'>
+                        {user.firstNames}
+                      </p>
+                      <p className='font-bold'>
+                        {user.lastNames}
+                      </p>
+                    </div>
+                  </td>
+                  <td className='px-4 py-2'>{user.email}</td>
+                  <td className='px-4 py-2'>{user.phone}</td>
+                  <td className='px-4 py-2'>
+                    <div className='flex flex-row items-center justify-center gap-x-4'>
+                      <RowOptions
+                        onViewCLick={() => handleOpenModal(viewModal.handleOpen, user.id)}
+                        onEditClick={() => handleOpenModal(editModal.handleOpen, user.id)}
+                        onDeleteClick={() => handleOpenModal(deleteModal.handleOpen, user.id)}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </TableBody>
+          </AdminTable>
+        )}
       </div>
+
+      <Modal
+        title='User Details'
+        actionTitle='Accept'
+        isOpen={viewModal.isOpen}
+        onClose={viewModal.handleClose}
+      >
+        <div className='flex items-center justify-center'>
+          <img
+            src={user.image}
+            alt={`${user.firstNames} ${user.lastNames}`}
+            className='w-32 h-32 rounded-full'
+          />
+        </div>
+        <div className='flex flex-col gap-y-2 p-4'>
+          <DisabledText text={user.id} />
+
+          <p className='font-bold'>Full Name:</p>
+          <DisabledText text={user.firstNames + ' ' + user.lastNames} />
+
+          <div className='grid grid-cols-2 gap-4'>
+            <div>
+              <p className='font-bold'>Email:</p>
+              <DisabledText text={user.email} />
+            </div>
+            <div>
+              <p className='font-bold'>Phone:</p>
+              <DisabledText text={user.phone} />
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        title='Create new user'
+        actionTitle='Save'
+        isOpen={createModal.isOpen}
+        action={handleCreate}
+        onClose={createModal.handleClose}
+      >
+        <form action=''>
+          <div className='flex items-center justify-center'>
+            <input type='file' onChange={handleDataChange} />
+          </div>
+          <div className='flex flex-col gap-y-2 p-4'>
+
+            <div className='grid grid-cols-2 gap-4'>
+              <div className='flex flex-col gap-y-2'>
+                <div className='flex flex-col'>
+                  <label htmlFor='firstNames' className='font-bold'>First names:</label>
+                  <TextInput
+                    name='firstNames'
+                    id='firstNames'
+                    value={user.firstNames}
+                    handleDataChange={handleDataChange}
+                    placeholder='Insert first names'
+                  />
+                </div>
+                <div className='flex flex-col'>
+                  <label htmlFor='email' className='font-bold'>Email:</label>
+                  <TextInput
+                    name='email'
+                    id='email'
+                    value={user.email}
+                    handleDataChange={handleDataChange}
+                    placeholder='Insert email'
+                  />
+                </div>
+              </div>
+              <div className='flex flex-col gap-y-2'>
+                <div className='flex flex-col'>
+                  <label htmlFor='lastNames' className='font-bold'>Last names:</label>
+                  <TextInput
+                    name='lastNames'
+                    id='lastNames'
+                    value={user.lastNames}
+                    handleDataChange={handleDataChange}
+                    placeholder='Insert last names'
+                  />
+                </div>
+                <div className='flex flex-col'>
+                  <label htmlFor='phone' className='font-bold'>Phone:</label>
+                  <TextInput
+                    name='phone'
+                    id='phone'
+                    value={user.phone}
+                    handleDataChange={handleDataChange}
+                    placeholder='Insert phone'
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        title='Edit user'
+        actionTitle='Save changes'
+        isOpen={editModal.isOpen}
+        action={handleEdit}
+        onClose={editModal.handleClose}
+      >
+        <form action=''>
+          <div className='flex items-center justify-center'>
+            <img
+              src={user.image}
+              alt={`${user.firstNames} ${user.lastNames}`}
+              className='w-32 h-32 rounded-full'
+            />
+          </div>
+          <div className='flex flex-col gap-y-2 p-4'>
+
+            <DisabledText text={user.id} />
+
+            <div className='grid grid-cols-2 gap-4'>
+              <div className='flex flex-col gap-y-2'>
+                <div className='flex flex-col'>
+                  <label htmlFor='firstNames' className='font-bold'>First names:</label>
+                  <TextInput
+                    name='firstNames'
+                    id='firstNames'
+                    value={user.firstNames}
+                    handleDataChange={handleDataChange}
+                    placeholder='Insert first names'
+                  />
+                </div>
+                <div className='flex flex-col'>
+                  <label htmlFor='email' className='font-bold'>Email:</label>
+                  <TextInput
+                    name='email'
+                    id='email'
+                    value={user.email}
+                    handleDataChange={handleDataChange}
+                    placeholder='Insert email'
+                  />
+                </div>
+              </div>
+              <div className='flex flex-col gap-y-2'>
+                <div className='flex flex-col'>
+                  <label htmlFor='lastNames' className='font-bold'>Last names:</label>
+                  <TextInput
+                    name='lastNames'
+                    id='lastNames'
+                    value={user.lastNames}
+                    handleDataChange={handleDataChange}
+                    placeholder='Insert last names'
+                  />
+                </div>
+                <div className='flex flex-col'>
+                  <label htmlFor='phone' className='font-bold'>Phone:</label>
+                  <TextInput
+                    name='phone'
+                    id='phone'
+                    value={user.phone}
+                    handleDataChange={handleDataChange}
+                    placeholder='Insert phone'
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        title='Delete user'
+        actionTitle='Delete'
+        action={handleDelete}
+        isOpen={deleteModal.isOpen}
+        onClose={deleteModal.handleClose}
+      >
+        <form action=''>
+          <div className='flex items-center justify-center'>
+            <img
+              src={user.image}
+              alt={`${user.firstNames} ${user.lastNames}`}
+              className='w-32 h-32 rounded-full'
+            />
+          </div>
+          <div className='flex flex-col gap-y-2 p-4'>
+
+            <DisabledText text={user.id} />
+
+            <div className='grid grid-cols-2 gap-4'>
+              <div className='flex flex-col gap-y-2'>
+                <div className='flex flex-col'>
+                  <label htmlFor='firstNames' className='font-bold'>First names:</label>
+                  <DisabledText
+                    text={user.firstNames}
+                  />
+                </div>
+                <div className='flex flex-col'>
+                  <label htmlFor='email' className='font-bold'>Email:</label>
+                  <DisabledText
+                    text={user.email}
+                  />
+                </div>
+              </div>
+              <div className='flex flex-col gap-y-2'>
+                <div className='flex flex-col'>
+                  <label htmlFor='lastNames' className='font-bold'>Last names:</label>
+                  <DisabledText
+                    text={user.lastNames}
+                  />
+                </div>
+                <div className='flex flex-col'>
+                  <label htmlFor='phone' className='font-bold'>Phone:</label>
+                  <DisabledText
+                    text={user.phone}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </Modal>
     </AdminLayout>
   )
 }
 
-export default PersonsView
+export default Persons
