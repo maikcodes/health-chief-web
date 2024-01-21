@@ -1,12 +1,12 @@
-import { AdminLayout } from '../../../../components/Layouts'
-import { AdminTable, RowOptions, TableBody, TableHead } from '../../../../components/Tables'
-import { ButtonPrimary } from '../../../../components/Buttons'
-import { DisabledText, PanelTitle } from '../../../../components/Texts'
-import { SearchInput, TextInput } from '../../../../components/Inputs'
-import { UserServices } from '../../../../services/UserServices/UserServices'
+import { AdminLayout } from '@components/Layouts'
+import { AdminTable, RowOptions, TableBody, TableHead } from '@components/Tables'
+import { ButtonPrimary } from '@components/Buttons'
+import { DisabledText, PanelTitle } from '@components/Texts'
+import { Modal } from '@components/Dialogs'
+import { SearchInput, TextInput } from '@components/Inputs'
+import { UserServices } from '@services/User'
 
-import Modal from '../../../../components/Dialogs/Modal'
-import { UseFetch, useModal, UsePagination } from '../../../../hooks'
+import { UseFetch, useModal, UsePagination } from '@hooks'
 import { useState } from 'react'
 
 function Users () {
