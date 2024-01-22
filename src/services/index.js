@@ -1,6 +1,7 @@
 export * from './Anamnesis'
 export * from './Appointment'
 export * from './Auth'
+export * from './DataFormatters'
 export * from './Doctor'
 export * from './GOH'
 export * from './PaginationIndices'
