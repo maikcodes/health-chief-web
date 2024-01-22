@@ -1,10 +1,11 @@
 import { AdminLayout } from '@components/Layouts'
-import { AdminTable, RowOptions, TableBody, TableHead } from '@components/Tables'
+import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@components/Tables/AdminTable'
 import { ButtonPrimary } from '@components/Buttons'
 import { DisabledText, PanelTitle } from '@components/Texts'
 import { Modal } from '@components/Dialogs'
 import { PersonServices } from '@services/Person'
-import { SearchInput, TextInput } from '@components/Inputs'
+import { SearchInput } from '@components/Inputs'
+import { FormInputDate, FormInputText, FormInputSelect } from '@components/Forms'
 
 import { UseFetch, useModal, UsePagination } from '@hooks'
 import { useState } from 'react'
@@ -12,48 +13,32 @@ import { useState } from 'react'
 function Persons () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
   const { data, error, loading } = UseFetch({ fetchFunction: PersonServices.getAll, page, limit })
-  const [person, setPerson] = useState({})
+  const [person, setPerson] = useState({
+    idCard: '',
+    names: '',
+    lastNames: '',
+    occupation: '',
+    maritalStatus: '',
+    nationality: '',
+    sex: '',
+    phoneNumber: '',
+    location: '',
+    birthDate: ''
+  })
   const createModal = useModal()
   const viewModal = useModal()
   const editModal = useModal()
   const deleteModal = useModal()
 
-  const properties = [
-    'idCard',
-    'names',
-    'lastNames',
-    'occupation',
-    'maritalStatus',
-    'nationality',
-    'sex',
-    'phoneNumber',
-    'location',
-    'birthDate'
-  ]
-
   const handleEmptyModal = (modalOpenHandler) => {
-    setPerson({
-      id: '',
-      idCard: '6301142207',
-      names: 'willy maykros',
-      lastNames: 'romero naula',
-      occupation: 'software engineer',
-      maritalStatus: 'S',
-      nationality: 'ECU',
-      sex: 'M',
-      phoneNumber: '0911146600',
-      location: 'Mars',
-      birthDate: '1999-12-24',
-      createdAt: '',
-      updatedAt: ''
-    })
+    setPerson({})
     modalOpenHandler()
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
     const persons = data.data
-    const filteredUser = persons.filter((_user) => _user.id === id)[0]
-    setPerson(filteredUser)
+    const filteredPerson = persons.filter((element) => element.id === id)[0]
+    setPerson(filteredPerson)
     modalOpenHandler()
   }
 
@@ -67,25 +52,23 @@ function Persons () {
   }
 
   const handleEdit = async () => {
-    PersonServices.update('2aceee46-8f35-4e0c-ba51-47c6381156b0', {
-      idCard: '6301142207',
-      names: 'edited again',
-      lastNames: 'romero naula',
-      occupation: 'software engineer',
-      maritalStatus: 'S',
-      nationality: 'ECU',
-      sex: 'M',
-      phoneNumber: '0911146600',
-      location: 'Mars',
-      birthDate: '1999-12-24'
-    })
-
-    const data = await PersonServices.get('2aceee46-8f35-4e0c-ba51-47c6381156b0')
-    console.log(data)
+    PersonServices.update(person.id, { person })
   }
 
   const handleDelete = () => {
     PersonServices.delete('50f206fe-7d6a-414f-a38f-378bed8522a0')
+  }
+
+  const renderProfileImage = (data) => {
+    if (!data.image) {
+      return (
+        <div className='w-full h-full bg-biscay-500 text-center p-2 text-white font-bold uppercase'>
+          {data.names[0] + '' + data.lastNames[0]}
+        </div>
+      )
+    }
+
+    return <img src={person.image} alt={`${person.names} ${person.lastNames}`} />
   }
 
   return (
@@ -125,11 +108,11 @@ function Persons () {
           }}
           >
             <TableHead>
-              <td className='px-4 py-2 text-center'>id</td>
-              <th className='px-4 py-2 w-72'>id card</th>
-              <th className='px-4 py-2 w-72'>name</th>
-              <th className='px-4 py-2'>phone</th>
-              <th className='px-4 py-2 text-center'>settings</th>
+              <TableHeader>name</TableHeader>
+              <TableHeader>id</TableHeader>
+              <TableHeader>id card</TableHeader>
+              <TableHeader>phone</TableHeader>
+              <TableHeader>settings</TableHeader>
             </TableHead>
             <TableBody>
               {data.data?.map((person) => (
@@ -137,11 +120,9 @@ function Persons () {
                   key={person.id}
                   className='lg:hover:bg-gray-300'
                 >
-                  <td className='px-4 py-2 font-bold text-center'>{person.id}</td>
-                  <td className='px-4 py-2 font-bold text-center'>{person.idCard}</td>
-                  <td className='px-4 py-2 capitalize flex w-72 md:w-62 flex-row items-center gap-x-2'>
+                  <td className='px-4 py-2 capitalize flex flex-row items-center gap-x-2'>
                     <div className='w-12 h-12 rounded-full overflow-hidden border-2 border-biscay-600'>
-                      <img src={person.image} alt={`${person.names} ${person.lastNames}`} />
+                      {renderProfileImage(person)}
                     </div>
                     <div className='flex flex-col'>
                       <p className='font-bold'>
@@ -152,7 +133,9 @@ function Persons () {
                       </p>
                     </div>
                   </td>
-                  <td className='px-4 py-2'>{person.phoneNumber}</td>
+                  <td className='px-4 py-2 text-center'>{person.id}</td>
+                  <td className='px-4 py-2 text-center'>{person.idCard}</td>
+                  <td className='px-4 py-2 text-center'>{person.phoneNumber}</td>
                   <td className='px-4 py-2'>
                     <div className='flex flex-row items-center justify-center gap-x-4'>
                       <RowOptions
@@ -170,7 +153,7 @@ function Persons () {
       </div>
 
       <Modal
-        title='User Details'
+        title='Person Details'
         actionTitle='Accept'
         isOpen={viewModal.isOpen}
         onClose={viewModal.handleClose}
@@ -210,17 +193,74 @@ function Persons () {
       >
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
-            <div className='grid grid-cols-2 gap-4'>
-              {properties.map(property => (
-                <TextInput
-                  key={property}
-                  name={property}
-                  id={property}
-                  value={person[property]}
-                  handleDataChange={handleDataChange}
-                  placeholder={`Insert ${property}`}
-                />
-              ))}
+            <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
+              <FormInputText
+                title='ID Card'
+                value={person.idCard}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                title='Names'
+                value={person.names}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                title='Last names'
+                value={person.lastNames}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                title='Phone number'
+                value={person.phoneNumber}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputDate
+                title='Birth date'
+                value={person.birthDate}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                title='Occupation'
+                value={person.occupation}
+                handleDataChange={handleDataChange}
+              />
+              <div className='lg:col-span-2'>
+                <div className='flex flex-col lg:grid lg:grid-cols-3 gap-4'>
+                  <FormInputSelect
+                    title='Marital status'
+                    value={person.maritalStatus}
+                    handleDataChange={handleDataChange}
+                    options={[
+                      { option: 'Single', value: 'S' },
+                      { option: 'Married', value: 'M' },
+                      { option: 'Divorced', value: 'D' }
+                    ]}
+                  />
+                  <FormInputSelect
+                    title='Sex'
+                    value={person.sex}
+                    handleDataChange={handleDataChange}
+                    options={[
+                      { option: 'Male', value: 'M' },
+                      { option: 'Female', value: 'F' }
+                    ]}
+                  />
+                  <FormInputSelect
+                    title='Nationality'
+                    value={person.nationality}
+                    handleDataChange={handleDataChange}
+                    options={[
+                      { option: 'Ecuador', value: 'ECU' },
+                      { option: 'United States', value: 'USA' }
+                    ]}
+                  />
+                </div>
+              </div>
+              <FormInputText
+                title='Location'
+                value={person.location}
+                handleDataChange={handleDataChange}
+              />
             </div>
           </div>
         </form>
@@ -234,62 +274,78 @@ function Persons () {
         onClose={editModal.handleClose}
       >
         <form action=''>
-          <div className='flex items-center justify-center'>
-            <img
-              src={person.image}
-              alt={`${person.names} ${person.lastNames}`}
-              className='w-32 h-32 rounded-full'
-            />
-          </div>
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledText text={person.id} />
 
-            <div className='grid grid-cols-2 gap-4'>
-              <div className='flex flex-col gap-y-2'>
-                <div className='flex flex-col'>
-                  <label htmlFor='names' className='font-bold'>First names:</label>
-                  <TextInput
-                    name='names'
-                    id='names'
-                    value={person.names}
+            <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
+              <FormInputText
+                title='ID Card'
+                value={person.idCard}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                title='Names'
+                value={person.names}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                title='Last names'
+                value={person.lastNames}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                title='Phone number'
+                value={person.phoneNumber}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputDate
+                title='Birth date'
+                value={person.birthDate}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                title='Occupation'
+                value={person.occupation}
+                handleDataChange={handleDataChange}
+              />
+              <div className='lg:col-span-2'>
+                <div className='flex flex-col lg:grid lg:grid-cols-3 gap-4'>
+                  <FormInputSelect
+                    title='Marital status'
+                    value={person.maritalStatus}
                     handleDataChange={handleDataChange}
-                    placeholder='Insert first names'
+                    options={[
+                      { option: 'Single', value: 'S' },
+                      { option: 'Married', value: 'M' },
+                      { option: 'Divorced', value: 'D' }
+                    ]}
                   />
-                </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='email' className='font-bold'>Email:</label>
-                  <TextInput
-                    name='email'
-                    id='email'
-                    value={person.email}
+                  <FormInputSelect
+                    title='Sex'
+                    value={person.sex}
                     handleDataChange={handleDataChange}
-                    placeholder='Insert email'
+                    options={[
+                      { option: 'Male', value: 'M' },
+                      { option: 'Female', value: 'F' }
+                    ]}
+                  />
+                  <FormInputSelect
+                    title='Nationality'
+                    value={person.nationality}
+                    handleDataChange={handleDataChange}
+                    options={[
+                      { option: 'Ecuador', value: 'ECU' },
+                      { option: 'United States', value: 'USA' }
+                    ]}
                   />
                 </div>
               </div>
-              <div className='flex flex-col gap-y-2'>
-                <div className='flex flex-col'>
-                  <label htmlFor='lastNames' className='font-bold'>Last names:</label>
-                  <TextInput
-                    name='lastNames'
-                    id='lastNames'
-                    value={person.lastNames}
-                    handleDataChange={handleDataChange}
-                    placeholder='Insert last names'
-                  />
-                </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='phone' className='font-bold'>Phone:</label>
-                  <TextInput
-                    name='phone'
-                    id='phone'
-                    value={person.phone}
-                    handleDataChange={handleDataChange}
-                    placeholder='Insert phone'
-                  />
-                </div>
-              </div>
+              <FormInputText
+                title='Location'
+                value={person.location}
+                handleDataChange={handleDataChange}
+              />
             </div>
           </div>
         </form>
