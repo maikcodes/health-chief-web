@@ -1,7 +1,4 @@
 import React from 'react'
-import userImage from '../../../../../public/profile.png'
-import { BsEyeFill, BsTrashFill } from 'react-icons/bs'
-import { AiFillEdit } from 'react-icons/ai'
 import { AdminLayout } from '../../../../components/Layouts'
 // import { AdminTable } from '../../../../components/Tables'
 
