@@ -1,6 +1,7 @@
 import { ButtonPrimary } from '../Buttons'
+import { Link } from 'react-router-dom'
 
-function SidebarClosed ({ handleOpen, options }) {
+function SidebarClosed ({ handleOpen, options, handleSelect, selected }) {
   const sidebarMenuIcon = options.sidebarHeader.icon
   const sidebarOptions = options.sidebarOptions.options
   return (
@@ -15,13 +16,16 @@ function SidebarClosed ({ handleOpen, options }) {
               if ('icon' in option) {
                 return (
                   <li key={optionIndex}>
-                    <a
-                      href='#'
-                      className='text-white lg:hover:cursor-pointer py-1 hover:bg-biscay-400 rounded-xl capitalize flex flex-row items-center group relative justify-center px-2'
+                    <Link
+                      to={option.route}
+                      className={`${selected === option.id
+                        ? 'text-white lg:hover:cursor-pointer py-1 bg-biscay-400 rounded-xl capitalize flex flex-row items-center group relative justify-center px-2'
+                        : 'text-white lg:hover:cursor-pointer py-1 hover:bg-biscay-400 rounded-xl capitalize flex flex-row items-center group relative justify-center px-2'}`}
                       title={option.title}
+                      onClick={() => handleSelect(option.id)}
                     >
                       <div className='px-2'>{option.icon}</div>
-                    </a>
+                    </Link>
                   </li>
                 )
               }
