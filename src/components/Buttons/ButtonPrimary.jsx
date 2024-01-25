@@ -1,4 +1,4 @@
-function ButtonPrimary ({ icon, text, onClick }) {
+function ButtonPrimary ({ icon, type, text, onClick }) {
   const renderSpan = () => (
     <span className='text-white font-bold lg:text-lg px-4'>
       {text}
@@ -12,8 +12,8 @@ function ButtonPrimary ({ icon, text, onClick }) {
 
   return (
     <button
-      type='button'
-      onClick={onClick}
+      type={type ?? 'button'}
+      onClick={onClick ?? null}
       className='flex flex-row items-center justify-center w-full md:w-auto bg-biscay-700 rounded-lg lg:hover:bg-biscay-400 px-4 h-10 capitalize'
     >
       {icon ? renderIcon() : null}
