@@ -1,13 +1,15 @@
 import { AdminLayout } from '@components/Layouts'
 import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@components/Tables/AdminTable'
+import { AvatarImage, AvatarImageLabel } from '@components/Images'
 import { ButtonPrimary } from '@components/Buttons'
 import { DisabledText, PanelTitle } from '@components/Texts'
+import { FormInputDate, FormInputText, FormInputSelect, DisabledFormInput } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { PersonServices } from '@services/Person'
 import { SearchInput } from '@components/Inputs'
-import { FormInputDate, FormInputText, FormInputSelect } from '@components/Forms'
 
 import { UseFetch, useModal, UsePagination } from '@hooks'
+
 import { useState } from 'react'
 
 function Persons () {
@@ -25,6 +27,8 @@ function Persons () {
     location: '',
     birthDate: ''
   })
+  const [search, setSearch] = useState('')
+
   const createModal = useModal()
   const viewModal = useModal()
   const editModal = useModal()
@@ -37,7 +41,7 @@ function Persons () {
 
   const handleOpenModal = (modalOpenHandler, id) => {
     const persons = data.data
-    const filteredPerson = persons.filter((element) => element.id === id)[0]
+    const filteredPerson = persons.find((element) => element.id === id)
     setPerson(filteredPerson)
     modalOpenHandler()
   }
@@ -56,19 +60,12 @@ function Persons () {
   }
 
   const handleDelete = () => {
-    PersonServices.delete('50f206fe-7d6a-414f-a38f-378bed8522a0')
+    PersonServices.delete(person.id)
   }
 
-  const renderProfileImage = (data) => {
-    if (!data.image) {
-      return (
-        <div className='w-full h-full bg-biscay-500 text-center p-2 text-white font-bold uppercase'>
-          {data.names[0] + '' + data.lastNames[0]}
-        </div>
-      )
-    }
-
-    return <img src={person.image} alt={`${person.names} ${person.lastNames}`} />
+  const handleSearch = (event) => {
+    const value = event.target.value
+    setSearch(value)
   }
 
   return (
@@ -78,10 +75,13 @@ function Persons () {
         <div className='flex flex-col gap-y-2'>
           <PanelTitle text='Persons' />
 
-          <div className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'>
-            <SearchInput placeholder='Search persons' />
+          <form
+            className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
+            onSubmit={(event) => { event.preventDefault() }}
+          >
+            <SearchInput placeholder='Search persons' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
-          </div>
+          </form>
         </div>
 
         {error && (
@@ -115,38 +115,46 @@ function Persons () {
               <TableHeader>settings</TableHeader>
             </TableHead>
             <TableBody>
-              {data.data?.map((person) => (
-                <tr
-                  key={person.id}
-                  className='lg:hover:bg-gray-300'
-                >
-                  <td className='px-4 py-2 capitalize flex flex-row items-center gap-x-2'>
-                    <div className='w-12 h-12 rounded-full overflow-hidden border-2 border-biscay-600'>
-                      {renderProfileImage(person)}
-                    </div>
-                    <div className='flex flex-col'>
-                      <p className='font-bold'>
-                        {person.names}
-                      </p>
-                      <p className='font-bold'>
-                        {person.lastNames}
-                      </p>
-                    </div>
-                  </td>
-                  <td className='px-4 py-2 text-center'>{person.id}</td>
-                  <td className='px-4 py-2 text-center'>{person.idCard}</td>
-                  <td className='px-4 py-2 text-center'>{person.phoneNumber}</td>
-                  <td className='px-4 py-2'>
-                    <div className='flex flex-row items-center justify-center gap-x-4'>
-                      <RowOptions
-                        onViewCLick={() => handleOpenModal(viewModal.handleOpen, person.id)}
-                        onEditClick={() => handleOpenModal(editModal.handleOpen, person.id)}
-                        onDeleteClick={() => handleOpenModal(deleteModal.handleOpen, person.id)}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {
+                data.data
+                  ?.filter(item => item.names.toLowerCase().includes(search.toLowerCase()))
+                  ?.map((person) => (
+                    <tr
+                      key={person.id}
+                      className='lg:hover:bg-gray-300'
+                    >
+                      <td className='px-4 py-2 capitalize flex flex-row items-center gap-x-2'>
+
+                        {
+                          person.image
+                            ? <AvatarImage imageUrl={person.image} alt={person.names + ' ' + person.lastNames} />
+                            : <AvatarImageLabel initials={person.names[0] + person.lastNames[0]} />
+                        }
+
+                        <div className='flex flex-col'>
+                          <p className='font-bold'>
+                            {person.names}
+                          </p>
+                          <p className='font-bold'>
+                            {person.lastNames}
+                          </p>
+                        </div>
+                      </td>
+                      <td className='px-4 py-2 text-center'>{person.id}</td>
+                      <td className='px-4 py-2 text-center'>{person.idCard}</td>
+                      <td className='px-4 py-2 text-center'>{person.phoneNumber}</td>
+                      <td className='px-4 py-2'>
+                        <div className='flex flex-row items-center justify-center gap-x-4'>
+                          <RowOptions
+                            onViewCLick={() => handleOpenModal(viewModal.handleOpen, person.id)}
+                            onEditClick={() => handleOpenModal(editModal.handleOpen, person.id)}
+                            onDeleteClick={() => handleOpenModal(deleteModal.handleOpen, person.id)}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+              }
             </TableBody>
           </AdminTable>
         )}
@@ -158,34 +166,61 @@ function Persons () {
         isOpen={viewModal.isOpen}
         onClose={viewModal.handleClose}
       >
-        <div className='flex items-center justify-center'>
-          <img
-            src={person.image}
-            alt={`${person.names} ${person.lastNames}`}
-            className='w-32 h-32 rounded-full'
-          />
-        </div>
         <div className='flex flex-col gap-y-2 p-4'>
+
           <DisabledText text={person.id} />
 
-          <p className='font-bold'>Full Name:</p>
-          <DisabledText text={person.names + ' ' + person.lastNames} />
-
-          <div className='grid grid-cols-2 gap-4'>
-            <div>
-              <p className='font-bold'>Email:</p>
-              <DisabledText text={person.email} />
+          <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
+            <DisabledFormInput
+              title='ID Card'
+              value={person.idCard}
+            />
+            <DisabledFormInput
+              title='Names'
+              value={person.names}
+            />
+            <DisabledFormInput
+              title='Last names'
+              value={person.lastNames}
+            />
+            <DisabledFormInput
+              title='Phone number'
+              value={person.phoneNumber}
+            />
+            <DisabledFormInput
+              title='Birth date'
+              value={person.birthDate}
+            />
+            <DisabledFormInput
+              title='Occupation'
+              value={person.occupation}
+            />
+            <div className='lg:col-span-2'>
+              <div className='flex flex-col lg:grid lg:grid-cols-3 gap-4'>
+                <DisabledFormInput
+                  title='Marital status'
+                  value={person.maritalStatus}
+                />
+                <DisabledFormInput
+                  title='Sex'
+                  value={person.sex}
+                />
+                <DisabledFormInput
+                  title='Nationality'
+                  value={person.nationality}
+                />
+              </div>
             </div>
-            <div>
-              <p className='font-bold'>Phone:</p>
-              <DisabledText text={person.phone} />
-            </div>
+            <DisabledFormInput
+              title='Location'
+              value={person.location}
+            />
           </div>
         </div>
       </Modal>
 
       <Modal
-        title='Create new person'
+        title='Create person'
         actionTitle='Save'
         isOpen={createModal.isOpen}
         action={handleCreate}
@@ -359,46 +394,55 @@ function Persons () {
         onClose={deleteModal.handleClose}
       >
         <form action=''>
-          <div className='flex items-center justify-center'>
-            <img
-              src={person.image}
-              alt={`${person.names} ${person.lastNames}`}
-              className='w-32 h-32 rounded-full'
-            />
-          </div>
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledText text={person.id} />
 
-            <div className='grid grid-cols-2 gap-4'>
-              <div className='flex flex-col gap-y-2'>
-                <div className='flex flex-col'>
-                  <label htmlFor='names' className='font-bold'>First names:</label>
-                  <DisabledText
-                    text={person.names}
+            <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
+              <DisabledFormInput
+                title='ID Card'
+                value={person.idCard}
+              />
+              <DisabledFormInput
+                title='Names'
+                value={person.names}
+              />
+              <DisabledFormInput
+                title='Last names'
+                value={person.lastNames}
+              />
+              <DisabledFormInput
+                title='Phone number'
+                value={person.phoneNumber}
+              />
+              <DisabledFormInput
+                title='Birth date'
+                value={person.birthDate}
+              />
+              <DisabledFormInput
+                title='Occupation'
+                value={person.occupation}
+              />
+              <div className='lg:col-span-2'>
+                <div className='flex flex-col lg:grid lg:grid-cols-3 gap-4'>
+                  <DisabledFormInput
+                    title='Marital status'
+                    value={person.maritalStatus}
                   />
-                </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='email' className='font-bold'>Email:</label>
-                  <DisabledText
-                    text={person.email}
+                  <DisabledFormInput
+                    title='Sex'
+                    value={person.sex}
+                  />
+                  <DisabledFormInput
+                    title='Nationality'
+                    value={person.nationality}
                   />
                 </div>
               </div>
-              <div className='flex flex-col gap-y-2'>
-                <div className='flex flex-col'>
-                  <label htmlFor='lastNames' className='font-bold'>Last names:</label>
-                  <DisabledText
-                    text={person.lastNames}
-                  />
-                </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='phone' className='font-bold'>Phone:</label>
-                  <DisabledText
-                    text={person.phone}
-                  />
-                </div>
-              </div>
+              <DisabledFormInput
+                title='Location'
+                value={person.location}
+              />
             </div>
           </div>
         </form>
