@@ -3,6 +3,7 @@ import { toCamelCase } from '@services/DataFormatters'
 
 function FormInputDate ({ value, title, handleDataChange }) {
   const elementName = toCamelCase(title)
+
   return (
     <div className='flex flex-col'>
       <label className='font-bold' htmlFor={elementName}>{title}:</label>
