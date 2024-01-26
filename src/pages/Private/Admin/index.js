@@ -1,4 +1,5 @@
 export { default as Admin } from './Admin'
+export { default as AdminRoutes } from './AdminRoutes'
 export * from './Anamnesis'
 export * from './Appointments'
 export * from './Doctors'

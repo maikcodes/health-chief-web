@@ -71,7 +71,7 @@ function PhysicalExaminations () {
       <div className='flex flex-col gap-y-2 h-full w-full'>
 
         <div className='flex flex-col gap-y-2'>
-          <PanelTitle text='PhysicalExaminations' />
+          <PanelTitle text='Physical Examinations' />
 
           <form
             className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
