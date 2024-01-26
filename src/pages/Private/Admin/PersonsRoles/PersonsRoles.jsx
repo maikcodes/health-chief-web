@@ -46,11 +46,11 @@ function PersonsRoles () {
   }
 
   const handleEdit = async () => {
-    PersonRoleServices.update(personRole.idPerson, { personRole })
+    PersonRoleServices.update(personRole.idPerson, personRole.idRole, { personRole })
   }
 
   const handleDelete = () => {
-    PersonRoleServices.delete(personRole.idPerson)
+    PersonRoleServices.delete(personRole.idPerson, personRole.idRole)
   }
 
   const handleSearch = (event) => {
