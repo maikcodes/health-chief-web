@@ -5,7 +5,7 @@ function Modal ({ title, actionTitle, isOpen, onClose, action, children }) {
   if (isOpen) {
     return (
       <div className='bg-gray-600 bg-opacity-80 fixed overflow-y-auto overflow-x-hidden top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full max-h-full'>
-        <div className='relative p-4 w-full max-w-3xl max-h-full'>
+        <div className='relative p-4 w-full lg:max-w-[70vw] max-h-full'>
           <div className='relative bg-white rounded-lg shadow-lg shadow-gray-700'>
 
             <div className='flex items-center justify-between p-4 rounded-t-lg border-b border-gray-300 bg-biscay-700 text-white'>
@@ -15,7 +15,7 @@ function Modal ({ title, actionTitle, isOpen, onClose, action, children }) {
               </button>
             </div>
 
-            <div className='p-4'>
+            <div className='p-4 lg:overflow-y-scroll lg:max-h-[60vh]'>
               {children}
             </div>
 
