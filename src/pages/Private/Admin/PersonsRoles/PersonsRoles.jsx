@@ -106,19 +106,19 @@ function PersonsRoles () {
               {
                 data.data
                   ?.filter(item => item.idPerson.toLowerCase().includes(search.toLowerCase()))
-                  ?.map((_role) => (
+                  ?.map((_personRoles) => (
                     <tr
-                      key={_role.idPerson}
+                      key={_personRoles.idPerson}
                       className='lg:hover:bg-gray-300'
                     >
-                      <td className='px-4 py-2 text-center'>{_role.idPerson}</td>
-                      <td className='px-4 py-2 text-center'>{_role.idRole}</td>
+                      <td className='px-4 py-2 text-center'>{_personRoles.idPerson}</td>
+                      <td className='px-4 py-2 text-center'>{_personRoles.idRole}</td>
                       <td className='px-4 py-2'>
                         <div className='flex flex-row items-center justify-center gap-x-4'>
                           <RowOptions
-                            onViewCLick={() => handleOpenModal(viewModal.handleOpen, _role.idPerson)}
-                            onEditClick={() => handleOpenModal(editModal.handleOpen, _role.idPerson)}
-                            onDeleteClick={() => handleOpenModal(deleteModal.handleOpen, _role.idPerson)}
+                            onViewCLick={() => handleOpenModal(viewModal.handleOpen, _personRoles.idPerson)}
+                            onEditClick={() => handleOpenModal(editModal.handleOpen, _personRoles.idPerson)}
+                            onDeleteClick={() => handleOpenModal(deleteModal.handleOpen, _personRoles.idPerson)}
                           />
                         </div>
                       </td>
