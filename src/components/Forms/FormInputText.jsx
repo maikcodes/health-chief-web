@@ -8,7 +8,6 @@ function FormInputText ({ value, title, handleDataChange }) {
     <div className='flex flex-col'>
       <label className='font-bold' htmlFor={elementName}>{title}:</label>
       <TextInput
-        name={elementName}
         id={elementName}
         value={value}
         handleDataChange={handleDataChange}

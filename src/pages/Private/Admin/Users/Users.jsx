@@ -2,9 +2,11 @@ import { AdminLayout } from '@components/Layouts'
 import { AdminTable, RowOptions, TableBody, TableHead } from '@components/Tables'
 import { ButtonPrimary } from '@components/Buttons'
 import { DisabledText, PanelTitle } from '@components/Texts'
+import { Error } from '@components/Errors'
 import { Modal } from '@components/Dialogs'
 import { SearchInput, TextInput } from '@components/Inputs'
 import { UserServices } from '@services/User'
+import { Spinner } from '@components/Spinners'
 
 import { UseFetch, useModal, UsePagination } from '@hooks'
 import { useState } from 'react'
@@ -66,17 +68,8 @@ function Users () {
           </div>
         </div>
 
-        {error && (
-          <div className='w-full h-full flex items-start justify-between'>
-            <p>Error</p>
-          </div>
-        )}
-
-        {loading && (
-          <div className='w-full h-full flex items-start justify-between'>
-            <p>Loading Data</p>
-          </div>
-        )}
+        {error && <Error />}
+        {loading && <Spinner />}
 
         {!error && !loading && data && (
           <AdminTable pagination={{

@@ -42,6 +42,7 @@ export class PatientServices {
 
   static async create (data) {
     try {
+      console.log(data)
       await post(`${SERVER_NAME}/api/v1/patients`, data)
       return {
         success: true,

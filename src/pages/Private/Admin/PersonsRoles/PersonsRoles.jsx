@@ -1,10 +1,12 @@
 import { AdminLayout } from '@components/Layouts'
 import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@components/Tables/AdminTable'
 import { ButtonPrimary } from '@components/Buttons'
+import { Error } from '@components/Errors'
 import { PanelTitle } from '@components/Texts'
 import { FormInputText, DisabledFormInput } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { SearchInput } from '@components/Inputs'
+import { Spinner } from '@components/Spinners'
 
 import { PersonRoleServices } from '@services/PersonRole'
 import { UseFetch, useModal, UsePagination } from '@hooks'
@@ -74,17 +76,8 @@ function PersonsRoles () {
           </form>
         </div>
 
-        {error && (
-          <div className='w-full h-full flex items-start justify-between'>
-            <p>Error</p>
-          </div>
-        )}
-
-        {loading && (
-          <div className='w-full h-full flex items-start justify-between'>
-            <p>Loading Data</p>
-          </div>
-        )}
+        {error && <Error />}
+        {loading && <Spinner />}
 
         {!error && !loading && data && (
           <AdminTable pagination={{

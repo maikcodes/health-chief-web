@@ -5,6 +5,8 @@ import { PanelTitle } from '@components/Texts'
 import { FormInputText, DisabledFormInput, FormInputSelect } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { SearchInput } from '@components/Inputs'
+import { Spinner } from '@components/Spinners'
+import { Error } from '@components/Errors'
 
 import { PatientServices } from '@services/Patient'
 import { UseFetch, useModal, UsePagination } from '@hooks'
@@ -37,11 +39,14 @@ function Patients () {
   }
 
   const handleDataChange = (event) => {
+    console.log(patient)
     const { name, value } = event.target
+    console.log({ name, value })
     setPatient({ ...patient, [name]: value })
   }
 
   const handleCreate = () => {
+    console.log(patient)
     PatientServices.create(patient)
   }
 
@@ -74,17 +79,8 @@ function Patients () {
           </form>
         </div>
 
-        {error && (
-          <div className='w-full h-full flex items-start justify-between'>
-            <p>Error</p>
-          </div>
-        )}
-
-        {loading && (
-          <div className='w-full h-full flex items-start justify-between'>
-            <p>Loading Data</p>
-          </div>
-        )}
+        {error && <Error />}
+        {loading && <Spinner />}
 
         {!error && !loading && data && (
           <AdminTable pagination={{
@@ -161,7 +157,7 @@ function Patients () {
         action={handleCreate}
         onClose={createModal.handleClose}
       >
-        <form action=''>
+        <div>
           <div className='flex flex-col gap-y-2 p-4'>
             <div className='flex flex-col gap-3'>
 
@@ -183,7 +179,7 @@ function Patients () {
 
             </div>
           </div>
-        </form>
+        </div>
       </Modal>
 
       <Modal

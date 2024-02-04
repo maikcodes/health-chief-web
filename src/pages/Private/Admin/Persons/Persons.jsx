@@ -3,10 +3,12 @@ import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@comp
 import { AvatarImage, AvatarImageLabel } from '@components/Images'
 import { ButtonPrimary } from '@components/Buttons'
 import { DisabledText, PanelTitle } from '@components/Texts'
+import { Error } from '@components/Errors'
 import { FormInputDate, FormInputText, FormInputSelect, DisabledFormInput } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { PersonServices } from '@services/Person'
 import { SearchInput } from '@components/Inputs'
+import { Spinner } from '@components/Spinners'
 
 import { UseFetch, useModal, UsePagination } from '@hooks'
 
@@ -84,17 +86,8 @@ function Persons () {
           </form>
         </div>
 
-        {error && (
-          <div className='w-full h-full flex items-start justify-between'>
-            <p>Error</p>
-          </div>
-        )}
-
-        {loading && (
-          <div className='w-full h-full flex items-start justify-between'>
-            <p>Loading Data</p>
-          </div>
-        )}
+        {error && <Error />}
+        {loading && <Spinner />}
 
         {!error && !loading && data && (
           <AdminTable pagination={{
