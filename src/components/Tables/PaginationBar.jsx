@@ -36,16 +36,18 @@ function PaginationBar ({ paginationObject }) {
   if (error) return (<p>Error</p>)
 
   return (
-    <div className='flex flex-col md:flex-row items-center lg:justify-between'>
-      <div className='text-gray-600 flex flex-row items-center gap-x-2'>
-        <p>Showing</p>
-        <span className='text-md font-bold'>{results}</span>
-        <p>
-          <span>({generateStartResults()} - {generateEndResults()}) </span>
-          of
-          <span className='text-md font-bold'> {totalResults} </span>
-          results
-        </p>
+    <div className='flex flex-col md:flex-row items-center justify-center md:justify-between gap-y-2'>
+      <div className='flex flex-col md:flex-row items-center gap-y-2'>
+        <div className='flex flex-row justify-center text-gray-600'>
+          <p className=''>
+            Showing
+            <span className='text-md font-bold'> {results} </span>
+            ({generateStartResults()} - {generateEndResults()})
+            of
+            <span className='text-md font-bold'> {totalResults} </span>
+            results
+          </p>
+        </div>
         <select
           id='results'
           className='text-md bg-gray-300 mx-2 rounded-lg px-2 py-1'
@@ -59,7 +61,7 @@ function PaginationBar ({ paginationObject }) {
           <option className='bg-white' value='100'>100</option>
         </select>
       </div>
-      <div className='flex flex-col w-full md:w-auto md:flex-row items-center gap-y-2 gap-x-2 md:gap-y-2'>
+      <div className={`w-full md:w-auto ${paginationIndices.length > 7 ? 'grid grid-cols-7' : 'flex'}  md:flex md:flex-row justify-center items-center gap-2 md:gap-y-2`}>
         <button
           className={`px-2 h-8 ${page === 1 ? 'lg:hover:cursor-not-allowed' : 'lg:hover:cursor-pointer lg:hover:bg-gray-400 shadow-md shadow-gray-500'} bg-gray-300 rounded-lg flex items-center text-gray-600`}
           onClick={handlePreviousPage}
