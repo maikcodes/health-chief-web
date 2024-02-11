@@ -16,7 +16,7 @@ import { useState } from 'react'
 
 function Persons () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data, error, loading } = UseFetch({ fetchFunction: PersonServices.getAll, page, limit })
+  const { data: personsData, error, loading, reloadData } = UseFetch({ fetchFunction: PersonServices.getAll, page, limit })
   const [person, setPerson] = useState({
     idCard: '',
     names: '',
@@ -42,7 +42,7 @@ function Persons () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = data.data
+    const persons = personsData.data
     const filteredPerson = persons.find((element) => element.id === id)
     setPerson(filteredPerson)
     modalOpenHandler()
@@ -53,16 +53,22 @@ function Persons () {
     setPerson({ ...person, [name]: value })
   }
 
-  const handleCreate = () => {
-    PersonServices.create(person)
+  const handleCreate = async () => {
+    await PersonServices.create(person)
+    createModal.handleClose()
+    reloadData()
   }
 
   const handleEdit = async () => {
-    PersonServices.update(person.id, { person })
+    await PersonServices.update(person.id, person)
+    editModal.handleClose()
+    reloadData()
   }
 
-  const handleDelete = () => {
-    PersonServices.delete(person.id)
+  const handleDelete = async () => {
+    await PersonServices.delete(person.id)
+    deleteModal.handleClose()
+    reloadData()
   }
 
   const handleSearch = (event) => {
@@ -89,14 +95,14 @@ function Persons () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && data && (
+        {!error && !loading && personsData && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: data.page,
-            totalPages: data.totalPages,
-            results: data.results,
-            totalResults: data.totalResults,
+            page: personsData.page,
+            totalPages: personsData.totalPages,
+            results: personsData.results,
+            totalResults: personsData.totalResults,
             limit
           }}
           >
@@ -109,39 +115,39 @@ function Persons () {
             </TableHead>
             <TableBody>
               {
-                data.data
+                personsData.data
                   ?.filter(item => item.names.toLowerCase().includes(search.toLowerCase()))
-                  ?.map((person) => (
+                  ?.map((_person) => (
                     <tr
-                      key={person.id}
+                      key={_person.id}
                       className='lg:hover:bg-gray-300'
                     >
                       <td className='px-4 py-2 capitalize flex flex-row items-center gap-x-2'>
 
                         {
-                          person.image
-                            ? <AvatarImage imageUrl={person.image} alt={person.names + ' ' + person.lastNames} />
-                            : <AvatarImageLabel initials={person.names[0] + person.lastNames[0]} />
+                          _person.image
+                            ? <AvatarImage imageUrl={_person.image} alt={_person.names + ' ' + _person.lastNames} />
+                            : <AvatarImageLabel initials={_person.names[0] + _person.lastNames[0]} />
                         }
 
                         <div className='flex flex-col'>
                           <p className='font-bold'>
-                            {person.names}
+                            {_person.names}
                           </p>
                           <p className='font-bold'>
-                            {person.lastNames}
+                            {_person.lastNames}
                           </p>
                         </div>
                       </td>
-                      <td className='px-4 py-2 text-center'>{person.id}</td>
-                      <td className='px-4 py-2 text-center'>{person.idCard}</td>
-                      <td className='px-4 py-2 text-center'>{person.phoneNumber}</td>
+                      <td className='px-4 py-2 text-center'>{_person.id}</td>
+                      <td className='px-4 py-2 text-center'>{_person.idCard}</td>
+                      <td className='px-4 py-2 text-center'>{_person.phoneNumber}</td>
                       <td className='px-4 py-2'>
                         <div className='flex flex-row items-center justify-center gap-x-4'>
                           <RowOptions
-                            onViewCLick={() => handleOpenModal(viewModal.handleOpen, person.id)}
-                            onEditClick={() => handleOpenModal(editModal.handleOpen, person.id)}
-                            onDeleteClick={() => handleOpenModal(deleteModal.handleOpen, person.id)}
+                            onViewCLick={() => handleOpenModal(viewModal.handleOpen, _person.id)}
+                            onEditClick={() => handleOpenModal(editModal.handleOpen, _person.id)}
+                            onDeleteClick={() => handleOpenModal(deleteModal.handleOpen, _person.id)}
                           />
                         </div>
                       </td>
@@ -223,31 +229,43 @@ function Persons () {
           <div className='flex flex-col gap-y-2 p-4'>
             <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
               <FormInputText
+                id='idCard'
+                name='idCard'
                 title='ID Card'
                 value={person.idCard}
                 handleDataChange={handleDataChange}
               />
               <FormInputText
+                id='names'
+                name='names'
                 title='Names'
                 value={person.names}
                 handleDataChange={handleDataChange}
               />
               <FormInputText
+                id='lastNames'
+                name='lastNames'
                 title='Last names'
                 value={person.lastNames}
                 handleDataChange={handleDataChange}
               />
               <FormInputText
+                id='phoneNumber'
+                name='phoneNumber'
                 title='Phone number'
                 value={person.phoneNumber}
                 handleDataChange={handleDataChange}
               />
               <FormInputDate
+                id='birthDate'
+                name='birthDate'
                 title='Birth date'
                 value={person.birthDate}
                 handleDataChange={handleDataChange}
               />
               <FormInputText
+                id='occupation'
+                name='occupation'
                 title='Occupation'
                 value={person.occupation}
                 handleDataChange={handleDataChange}
@@ -255,6 +273,8 @@ function Persons () {
               <div className='lg:col-span-2'>
                 <div className='flex flex-col lg:grid lg:grid-cols-3 gap-4'>
                   <FormInputSelect
+                    id='maritalStatus'
+                    name='maritalStatus'
                     title='Marital status'
                     value={person.maritalStatus}
                     handleDataChange={handleDataChange}
@@ -265,6 +285,8 @@ function Persons () {
                     ]}
                   />
                   <FormInputSelect
+                    id='sex'
+                    name='sex'
                     title='Sex'
                     value={person.sex}
                     handleDataChange={handleDataChange}
@@ -274,6 +296,8 @@ function Persons () {
                     ]}
                   />
                   <FormInputSelect
+                    id='nationality'
+                    name='nationality'
                     title='Nationality'
                     value={person.nationality}
                     handleDataChange={handleDataChange}
@@ -285,6 +309,8 @@ function Persons () {
                 </div>
               </div>
               <FormInputText
+                id='location'
+                name='location'
                 title='Location'
                 value={person.location}
                 handleDataChange={handleDataChange}
@@ -308,31 +334,43 @@ function Persons () {
 
             <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
               <FormInputText
+                id='idCard'
+                name='idCard'
                 title='ID Card'
                 value={person.idCard}
                 handleDataChange={handleDataChange}
               />
               <FormInputText
+                id='names'
+                name='names'
                 title='Names'
                 value={person.names}
                 handleDataChange={handleDataChange}
               />
               <FormInputText
+                id='lastNames'
+                name='lastNames'
                 title='Last names'
                 value={person.lastNames}
                 handleDataChange={handleDataChange}
               />
               <FormInputText
+                id='phoneNumber'
+                name='phoneNumber'
                 title='Phone number'
                 value={person.phoneNumber}
                 handleDataChange={handleDataChange}
               />
               <FormInputDate
+                id='birthDate'
+                name='birthDate'
                 title='Birth date'
                 value={person.birthDate}
                 handleDataChange={handleDataChange}
               />
               <FormInputText
+                id='occupation'
+                name='occupation'
                 title='Occupation'
                 value={person.occupation}
                 handleDataChange={handleDataChange}
@@ -340,6 +378,8 @@ function Persons () {
               <div className='lg:col-span-2'>
                 <div className='flex flex-col lg:grid lg:grid-cols-3 gap-4'>
                   <FormInputSelect
+                    id='maritalStatus'
+                    name='maritalStatus'
                     title='Marital status'
                     value={person.maritalStatus}
                     handleDataChange={handleDataChange}
@@ -350,6 +390,8 @@ function Persons () {
                     ]}
                   />
                   <FormInputSelect
+                    id='sex'
+                    name='sex'
                     title='Sex'
                     value={person.sex}
                     handleDataChange={handleDataChange}
@@ -359,6 +401,8 @@ function Persons () {
                     ]}
                   />
                   <FormInputSelect
+                    id='nationality'
+                    name='nationality'
                     title='Nationality'
                     value={person.nationality}
                     handleDataChange={handleDataChange}
@@ -370,6 +414,8 @@ function Persons () {
                 </div>
               </div>
               <FormInputText
+                id='location'
+                name='location'
                 title='Location'
                 value={person.location}
                 handleDataChange={handleDataChange}
@@ -393,46 +439,66 @@ function Persons () {
 
             <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
               <DisabledFormInput
+                id='idCard'
+                name='idCard'
                 title='ID Card'
                 value={person.idCard}
               />
               <DisabledFormInput
+                id='names'
+                name='names'
                 title='Names'
                 value={person.names}
               />
               <DisabledFormInput
+                id='lastNames'
+                name='lastNames'
                 title='Last names'
                 value={person.lastNames}
               />
               <DisabledFormInput
+                id='phoneNumber'
+                name='phoneNumber'
                 title='Phone number'
                 value={person.phoneNumber}
               />
               <DisabledFormInput
+                id='birthDate'
+                name='birthDate'
                 title='Birth date'
                 value={person.birthDate}
               />
               <DisabledFormInput
+                id='occupation'
+                name='occupation'
                 title='Occupation'
                 value={person.occupation}
               />
               <div className='lg:col-span-2'>
                 <div className='flex flex-col lg:grid lg:grid-cols-3 gap-4'>
                   <DisabledFormInput
+                    id='maritalStatus'
+                    name='maritalStatus'
                     title='Marital status'
                     value={person.maritalStatus}
                   />
                   <DisabledFormInput
+                    id='sex'
+                    name='sex'
                     title='Sex'
                     value={person.sex}
                   />
                   <DisabledFormInput
+                    id='nationality'
+                    name='nationality'
                     title='Nationality'
                     value={person.nationality}
                   />
                 </div>
               </div>
               <DisabledFormInput
+                id='location'
+                name='location'
                 title='Location'
                 value={person.location}
               />
