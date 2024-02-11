@@ -1,15 +1,12 @@
 import { TimeInput } from '@components/Inputs'
-import { toCamelCase } from '@services/DataFormatters'
 
-function FormInputTime ({ value, title, handleDataChange }) {
-  const elementName = toCamelCase(title)
-
+function FormInputTime ({ id, name, title, value, handleDataChange }) {
   return (
     <div className='flex flex-col'>
-      <label className='font-bold'>{title}:</label>
+      <label className='font-bold' htmlFor={name}>{title}:</label>
       <TimeInput
-        name={elementName}
-        id={elementName}
+        id={id}
+        name={name}
         value={value}
         handleDataChange={handleDataChange}
       />

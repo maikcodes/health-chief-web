@@ -5,7 +5,7 @@ function TextInput ({ name, id, value, handleDataChange, placeholder }) {
       type='text'
       name={name}
       id={id}
-      value={value}
+      value={value || ''}
       placeholder={placeholder}
       onChange={handleDataChange}
     />

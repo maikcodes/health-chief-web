@@ -5,7 +5,7 @@ function DateInput ({ name, id, value, handleDataChange }) {
       type='date'
       name={name}
       id={id}
-      value={value}
+      value={value || ''}
       onChange={handleDataChange}
     />
   )

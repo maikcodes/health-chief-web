@@ -1,15 +1,12 @@
 import { TextArea } from '@components/Inputs'
-import { toCamelCase } from '@services/DataFormatters'
 
-function FormTextArea ({ value, title, handleDataChange, isDisabled }) {
-  const elementName = toCamelCase(title)
-
+function FormTextArea ({ id, name, title, value, handleDataChange, isDisabled }) {
   return (
     <div className='flex flex-col'>
-      <label className='font-bold' htmlFor={elementName}>{title}:</label>
+      <label className='font-bold' htmlFor={name}>{title}:</label>
       <TextArea
-        name={elementName}
-        id={elementName}
+        id={id}
+        name={name}
         value={value}
         handleDataChange={handleDataChange ?? null}
         placeholder={`Insert ${title}`}

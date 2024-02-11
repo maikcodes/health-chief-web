@@ -1,15 +1,12 @@
 import { Select } from '@components/Selects'
-import { toCamelCase } from '@services/DataFormatters'
 
-function FormInputSelect ({ value, title, handleDataChange, options }) {
-  const elementName = toCamelCase(title)
-
+function FormInputSelect ({ id, name, title, value, handleDataChange, options }) {
   return (
     <div className='flex flex-col'>
-      <label className='font-bold' htmlFor={elementName}>{title}:</label>
+      <label className='font-bold' htmlFor={name}>{title}:</label>
       <Select
-        name={elementName}
-        id={elementName}
+        id={id}
+        name={name}
         value={value}
         options={options}
         handleDataChange={handleDataChange}
