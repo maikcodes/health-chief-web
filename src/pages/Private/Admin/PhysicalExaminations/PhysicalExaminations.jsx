@@ -14,9 +14,8 @@ import { useState } from 'react'
 
 function PhysicalExaminations () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data, error, loading } = UseFetch({ fetchFunction: PhysicalExaminationServices.getAll, page, limit })
+  const { data: fetchedPE, error, loading, reloadData } = UseFetch({ fetchFunction: PhysicalExaminationServices.getAll, page, limit })
   const [physicalExamination, setPhysicalExamination] = useState({
-    id: '',
     diseaseCode: '',
     visualization: '',
     patientCheck: '',
@@ -40,9 +39,9 @@ function PhysicalExaminations () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = data.data
-    const filteredPerson = persons.find((element) => element.id === id)
-    setPhysicalExamination(filteredPerson)
+    const physicalExaminationData = fetchedPE.data
+    const filteredPhysicalExamination = physicalExaminationData.find((element) => element.id === id)
+    setPhysicalExamination(filteredPhysicalExamination)
     modalOpenHandler()
   }
 
@@ -51,16 +50,22 @@ function PhysicalExaminations () {
     setPhysicalExamination({ ...physicalExamination, [name]: value })
   }
 
-  const handleCreate = () => {
-    PhysicalExaminationServices.create(physicalExamination)
+  const handleCreate = async () => {
+    await PhysicalExaminationServices.create(physicalExamination)
+    createModal.handleClose()
+    reloadData()
   }
 
   const handleEdit = async () => {
-    PhysicalExaminationServices.update(physicalExamination.id, { physicalExamination })
+    await PhysicalExaminationServices.update(physicalExamination.id, physicalExamination)
+    editModal.handleClose()
+    reloadData()
   }
 
-  const handleDelete = () => {
-    PhysicalExaminationServices.delete(physicalExamination.id)
+  const handleDelete = async () => {
+    await PhysicalExaminationServices.delete(physicalExamination.id)
+    deleteModal.handleClose()
+    reloadData()
   }
 
   const handleSearch = (event) => {
@@ -79,7 +84,7 @@ function PhysicalExaminations () {
             className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
             onSubmit={(event) => { event.preventDefault() }}
           >
-            <SearchInput placeholder='Search persons' handleChange={handleSearch} />
+            <SearchInput placeholder='Search physical examination' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
           </form>
         </div>
@@ -87,14 +92,14 @@ function PhysicalExaminations () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && data && (
+        {!error && !loading && fetchedPE && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: data.page,
-            totalPages: data.totalPages,
-            results: data.results,
-            totalResults: data.totalResults,
+            page: fetchedPE.page,
+            totalPages: fetchedPE.totalPages,
+            results: fetchedPE.results,
+            totalResults: fetchedPE.totalResults,
             limit
           }}
           >
@@ -105,7 +110,7 @@ function PhysicalExaminations () {
             </TableHead>
             <TableBody>
               {
-                data.data
+                fetchedPE.data
                   ?.filter(item => item.id.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_physicalExamination) => (
                     <tr
@@ -140,6 +145,8 @@ function PhysicalExaminations () {
         <div className='flex flex-col gap-y-2 p-4'>
 
           <DisabledFormInput
+            id='id'
+            name='id'
             title='ID Physical Examination'
             value={physicalExamination.id}
           />
@@ -147,41 +154,55 @@ function PhysicalExaminations () {
           <div className='flex flex-col gap-3'>
 
             <DisabledFormInput
+              id='diseaseCode'
+              name='diseaseCode'
               title='Disease Code'
               value={physicalExamination.diseaseCode}
             />
 
             <FormTextArea
+              id='visualization'
+              name='visualization'
               title='Visualization'
               value={physicalExamination.visualization}
               isDisabled
             />
 
             <FormTextArea
+              id='patientCheck'
+              name='patientCheck'
               title='Patient Check'
               value={physicalExamination.patientCheck}
               isDisabled
             />
 
             <FormTextArea
+              id='diagnosis'
+              name='diagnosis'
               title='Diagnosis'
               value={physicalExamination.diagnosis}
               isDisabled
             />
 
             <FormTextArea
+              id='conclusion'
+              name='conclusion'
               title='Conclusion'
               value={physicalExamination.conclusion}
               isDisabled
             />
 
             <FormTextArea
+              id='managementPlan'
+              name='managementPlan'
               title='Management Plan'
               value={physicalExamination.managementPlan}
               isDisabled
             />
 
             <FormTextArea
+              id='contingencyType'
+              name='contingencyType'
               title='Contingency Type'
               value={physicalExamination.contingencyType}
               isDisabled
@@ -191,11 +212,15 @@ function PhysicalExaminations () {
               <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
                 <DisabledFormInput
+                  id='symptomOnsetDate'
+                  name='symptomOnsetDate'
                   title='Symptom On Date'
                   value={physicalExamination.symptomOnsetDate}
                 />
 
                 <DisabledFormInput
+                  id='sickLeaveDays'
+                  name='sickLeaveDays'
                   title='Sick Leave Days'
                   value={physicalExamination.sickLeaveDays}
                 />
@@ -219,42 +244,64 @@ function PhysicalExaminations () {
             <div className='flex flex-col gap-3'>
 
               <FormInputText
+                id='id'
+                name='id'
+                title='Physical Examination ID'
+                value={physicalExamination.id}
+                handleDataChange={handleDataChange}
+              />
+
+              <FormInputText
+                id='diseaseCode'
+                name='diseaseCode'
                 title='Disease Code'
                 value={physicalExamination.diseaseCode}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='visualization'
+                name='visualization'
                 title='Visualization'
                 value={physicalExamination.visualization}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='patientCheck'
+                name='patientCheck'
                 title='Patient Check'
                 value={physicalExamination.patientCheck}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='diagnosis'
+                name='diagnosis'
                 title='Diagnosis'
                 value={physicalExamination.diagnosis}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='conclusion'
+                name='conclusion'
                 title='Conclusion'
                 value={physicalExamination.conclusion}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='managementPlan'
+                name='managementPlan'
                 title='Management Plan'
                 value={physicalExamination.managementPlan}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='contingencyType'
+                name='contingencyType'
                 title='Contingency Type'
                 value={physicalExamination.contingencyType}
                 handleDataChange={handleDataChange}
@@ -264,6 +311,8 @@ function PhysicalExaminations () {
                 <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
                   <FormInputDate
+                    id='symptomOnsetDate'
+                    name='symptomOnsetDate'
                     title='Symptom On Date'
                     value={physicalExamination.symptomOnsetDate}
                     handleDataChange={handleDataChange}
@@ -271,6 +320,8 @@ function PhysicalExaminations () {
                   />
 
                   <FormInputText
+                    id='sickLeaveDays'
+                    name='sickLeaveDays'
                     title='Sick Leave Days'
                     value={physicalExamination.sickLeaveDays}
                     handleDataChange={handleDataChange}
@@ -295,6 +346,8 @@ function PhysicalExaminations () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Physical Examination'
               value={physicalExamination.id}
             />
@@ -302,42 +355,56 @@ function PhysicalExaminations () {
             <div className='flex flex-col gap-3'>
 
               <FormInputText
+                id='diseaseCode'
+                name='diseaseCode'
                 title='Disease Code'
                 value={physicalExamination.diseaseCode}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='visualization'
+                name='visualization'
                 title='Visualization'
                 value={physicalExamination.visualization}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='patientCheck'
+                name='patientCheck'
                 title='Patient Check'
                 value={physicalExamination.patientCheck}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='diagnosis'
+                name='diagnosis'
                 title='Diagnosis'
                 value={physicalExamination.diagnosis}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='conclusion'
+                name='conclusion'
                 title='Conclusion'
                 value={physicalExamination.conclusion}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='managementPlan'
+                name='managementPlan'
                 title='Management Plan'
                 value={physicalExamination.managementPlan}
                 handleDataChange={handleDataChange}
               />
 
               <FormTextArea
+                id='contingencyType'
+                name='contingencyType'
                 title='Contingency Type'
                 value={physicalExamination.contingencyType}
                 handleDataChange={handleDataChange}
@@ -347,6 +414,8 @@ function PhysicalExaminations () {
                 <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
                   <FormInputDate
+                    id='symptomOnsetDate'
+                    name='symptomOnsetDate'
                     title='Symptom On Date'
                     value={physicalExamination.symptomOnsetDate}
                     handleDataChange={handleDataChange}
@@ -354,6 +423,8 @@ function PhysicalExaminations () {
                   />
 
                   <FormInputText
+                    id='sickLeaveDays'
+                    name='sickLeaveDays'
                     title='Sick Leave Days'
                     value={physicalExamination.sickLeaveDays}
                     handleDataChange={handleDataChange}
@@ -378,6 +449,8 @@ function PhysicalExaminations () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Physical Examination'
               value={physicalExamination.id}
             />
@@ -385,41 +458,55 @@ function PhysicalExaminations () {
             <div className='flex flex-col gap-3'>
 
               <DisabledFormInput
+                id='diseaseCode'
+                name='diseaseCode'
                 title='Disease Code'
                 value={physicalExamination.diseaseCode}
               />
 
               <FormTextArea
+                id='visualization'
+                name='visualization'
                 title='Visualization'
                 value={physicalExamination.visualization}
                 isDisabled
               />
 
               <FormTextArea
+                id='patientCheck'
+                name='patientCheck'
                 title='Patient Check'
                 value={physicalExamination.patientCheck}
                 isDisabled
               />
 
               <FormTextArea
+                id='diagnosis'
+                name='diagnosis'
                 title='Diagnosis'
                 value={physicalExamination.diagnosis}
                 isDisabled
               />
 
               <FormTextArea
+                id='conclusion'
+                name='conclusion'
                 title='Conclusion'
                 value={physicalExamination.conclusion}
                 isDisabled
               />
 
               <FormTextArea
+                id='managementPlan'
+                name='managementPlan'
                 title='Management Plan'
                 value={physicalExamination.managementPlan}
                 isDisabled
               />
 
               <FormTextArea
+                id='contingencyType'
+                name='contingencyType'
                 title='Contingency Type'
                 value={physicalExamination.contingencyType}
                 isDisabled
@@ -429,11 +516,15 @@ function PhysicalExaminations () {
                 <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
                   <DisabledFormInput
+                    id='symptomOnsetDate'
+                    name='symptomOnsetDate'
                     title='Symptom On Date'
                     value={physicalExamination.symptomOnsetDate}
                   />
 
                   <DisabledFormInput
+                    id='sickLeaveDays'
+                    name='sickLeaveDays'
                     title='Sick Leave Days'
                     value={physicalExamination.sickLeaveDays}
                   />
