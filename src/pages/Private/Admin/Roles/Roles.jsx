@@ -14,7 +14,7 @@ import { useState } from 'react'
 
 function Roles () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data, error, loading } = UseFetch({ fetchFunction: RoleServices.getAll, page, limit })
+  const { data: rolesData, error, loading, reloadData } = UseFetch({ fetchFunction: RoleServices.getAll, page, limit })
   const [role, setRole] = useState({
     id: '',
     name: ''
@@ -32,7 +32,7 @@ function Roles () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = data.data
+    const persons = rolesData.data
     const filteredPerson = persons.find((element) => element.id === id)
     setRole(filteredPerson)
     modalOpenHandler()
@@ -43,16 +43,22 @@ function Roles () {
     setRole({ ...role, [name]: value })
   }
 
-  const handleCreate = () => {
-    RoleServices.create(role)
+  const handleCreate = async () => {
+    await RoleServices.create(role)
+    createModal.handleClose()
+    reloadData()
   }
 
   const handleEdit = async () => {
-    RoleServices.update(role.id, { role })
+    await RoleServices.update(role.id, role)
+    editModal.handleClose()
+    reloadData()
   }
 
-  const handleDelete = () => {
-    RoleServices.delete(role.id)
+  const handleDelete = async () => {
+    await RoleServices.delete(role.id)
+    deleteModal.handleClose()
+    reloadData()
   }
 
   const handleSearch = (event) => {
@@ -79,14 +85,14 @@ function Roles () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && data && (
+        {!error && !loading && rolesData && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: data.page,
-            totalPages: data.totalPages,
-            results: data.results,
-            totalResults: data.totalResults,
+            page: rolesData.page,
+            totalPages: rolesData.totalPages,
+            results: rolesData.results,
+            totalResults: rolesData.totalResults,
             limit
           }}
           >
@@ -97,7 +103,7 @@ function Roles () {
             </TableHead>
             <TableBody>
               {
-                data.data
+                rolesData.data
                   ?.filter(item => item.id.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_role) => (
                     <tr
@@ -132,6 +138,8 @@ function Roles () {
         <div className='flex flex-col gap-y-2 p-4'>
 
           <DisabledFormInput
+            id='id'
+            name='id'
             title='ID Role'
             value={role.id}
           />
@@ -139,6 +147,8 @@ function Roles () {
           <div className='flex flex-col gap-3'>
 
             <DisabledFormInput
+              id='name'
+              name='name'
               title='Name'
               value={role.name}
             />
@@ -159,6 +169,8 @@ function Roles () {
             <div className='flex flex-col gap-3'>
 
               <FormInputText
+                id='name'
+                name='name'
                 title='Name'
                 value={role.name}
                 handleDataChange={handleDataChange}
@@ -180,6 +192,8 @@ function Roles () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Role'
               value={role.id}
             />
@@ -187,6 +201,8 @@ function Roles () {
             <div className='flex flex-col gap-3'>
 
               <FormInputText
+                id='name'
+                name='name'
                 title='Name'
                 value={role.name}
                 handleDataChange={handleDataChange}
@@ -208,6 +224,8 @@ function Roles () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Role'
               value={role.id}
             />
@@ -215,6 +233,8 @@ function Roles () {
             <div className='flex flex-col gap-3'>
 
               <DisabledFormInput
+                id='name'
+                name='name'
                 title='Name'
                 value={role.name}
               />
