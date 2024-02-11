@@ -7,7 +7,7 @@ function FormInputTime ({ id, name, title, value, handleDataChange }) {
       <TimeInput
         id={id}
         name={name}
-        value={value}
+        value={value || ''}
         handleDataChange={handleDataChange}
       />
     </div>
