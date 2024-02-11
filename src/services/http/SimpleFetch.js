@@ -16,7 +16,7 @@ export async function post (url, data) {
   try {
     const response = await fetch(url, {
       method: 'POST',
-      body: JSON.stringify({ data }),
+      body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' }
     })
 
@@ -34,7 +34,7 @@ export async function put (url, data) {
   try {
     const response = await fetch(url, {
       method: 'PUT',
-      body: JSON.stringify({ data }),
+      body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' }
     })
 
