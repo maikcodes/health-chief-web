@@ -14,7 +14,7 @@ import { useState } from 'react'
 
 function PersonsRoles () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data, error, loading } = UseFetch({ fetchFunction: PersonRoleServices.getAll, page, limit })
+  const { data: personRolesData, error, loading, reloadData } = UseFetch({ fetchFunction: PersonRoleServices.getAll, page, limit })
   const [personRole, setPersonRole] = useState({
     idPerson: '',
     idRole: ''
@@ -32,27 +32,34 @@ function PersonsRoles () {
   }
 
   const handleOpenModal = (modalOpenHandler, idPerson) => {
-    const persons = data.data
+    const persons = personRolesData.data
     const filteredPerson = persons.find((element) => element.idPerson === idPerson)
     setPersonRole(filteredPerson)
     modalOpenHandler()
   }
 
   const handleDataChange = (event) => {
-    const { idRole, value } = event.target
-    setPersonRole({ ...personRole, [idRole]: value })
+    console.log(personRole)
+    const { name, value } = event.target
+    setPersonRole({ ...personRole, [name]: value })
   }
 
-  const handleCreate = () => {
-    PersonRoleServices.create(personRole)
+  const handleCreate = async () => {
+    await PersonRoleServices.create(personRole)
+    createModal.handleClose()
+    reloadData()
   }
 
   const handleEdit = async () => {
-    PersonRoleServices.update(personRole.idPerson, personRole.idRole, { personRole })
+    await PersonRoleServices.update(personRole.id, personRole)
+    editModal.handleClose()
+    reloadData()
   }
 
-  const handleDelete = () => {
-    PersonRoleServices.delete(personRole.idPerson, personRole.idRole)
+  const handleDelete = async () => {
+    await PersonRoleServices.delete(personRole.id)
+    deleteModal.handleClose()
+    reloadData()
   }
 
   const handleSearch = (event) => {
@@ -79,14 +86,14 @@ function PersonsRoles () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && data && (
+        {!error && !loading && personRolesData && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: data.page,
-            totalPages: data.totalPages,
-            results: data.results,
-            totalResults: data.totalResults,
+            page: personRolesData.page,
+            totalPages: personRolesData.totalPages,
+            results: personRolesData.results,
+            totalResults: personRolesData.totalResults,
             limit
           }}
           >
@@ -97,11 +104,11 @@ function PersonsRoles () {
             </TableHead>
             <TableBody>
               {
-                data.data
+                personRolesData.data
                   ?.filter(item => item.idPerson.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_personRoles) => (
                     <tr
-                      key={_personRoles.idPerson}
+                      key={_personRoles.id}
                       className='lg:hover:bg-gray-300'
                     >
                       <td className='px-4 py-2 text-center'>{_personRoles.idPerson}</td>
@@ -132,13 +139,24 @@ function PersonsRoles () {
         <div className='flex flex-col gap-y-2 p-4'>
 
           <DisabledFormInput
-            title='ID Person'
-            value={personRole.idPerson}
+            id='id'
+            name='id'
+            title='ID Person Role'
+            value={personRole.id}
           />
 
           <div className='flex flex-col gap-3'>
 
             <DisabledFormInput
+              id='idPerson'
+              name='idPerson'
+              title='ID Person'
+              value={personRole.idPerson}
+            />
+
+            <DisabledFormInput
+              id='idRole'
+              name='idRole'
               title='ID Role'
               value={personRole.idRole}
             />
@@ -159,12 +177,16 @@ function PersonsRoles () {
             <div className='flex flex-col gap-3'>
 
               <FormInputText
+                id='idPerson'
+                name='idPerson'
                 title='ID Person'
                 value={personRole.idPerson}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='idRole'
+                name='idRole'
                 title='ID Role'
                 value={personRole.idRole}
                 handleDataChange={handleDataChange}
@@ -186,6 +208,15 @@ function PersonsRoles () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
+              title='ID Person Role'
+              value={personRole.id}
+            />
+
+            <DisabledFormInput
+              id='idPerson'
+              name='idPerson'
               title='ID Person'
               value={personRole.idPerson}
             />
@@ -193,6 +224,8 @@ function PersonsRoles () {
             <div className='flex flex-col gap-3'>
 
               <FormInputText
+                id='idRole'
+                name='idRole'
                 title='ID Role'
                 value={personRole.idRole}
                 handleDataChange={handleDataChange}
@@ -214,13 +247,24 @@ function PersonsRoles () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
-              title='ID Person'
-              value={personRole.idPerson}
+              id='id'
+              name='id'
+              title='ID Person Role'
+              value={personRole.id}
             />
 
             <div className='flex flex-col gap-3'>
 
               <DisabledFormInput
+                id='idPerson'
+                name='idPerson'
+                title='ID Person'
+                value={personRole.idPerson}
+              />
+
+              <DisabledFormInput
+                id='idRole'
+                name='idRole'
                 title='ID Role'
                 value={personRole.idRole}
               />
