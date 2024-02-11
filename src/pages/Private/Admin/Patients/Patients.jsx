@@ -14,7 +14,7 @@ import { useState } from 'react'
 
 function Patients () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data, error, loading } = UseFetch({ fetchFunction: PatientServices.getAll, page, limit })
+  const { data: patients, error, loading, reloadData } = UseFetch({ fetchFunction: PatientServices.getAll, page, limit })
   const [patient, setPatient] = useState({
     id: '',
     status: ''
@@ -32,30 +32,33 @@ function Patients () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = data.data
+    const persons = patients.data
     const filteredPerson = persons.find((element) => element.id === id)
     setPatient(filteredPerson)
     modalOpenHandler()
   }
 
   const handleDataChange = (event) => {
-    console.log(patient)
     const { name, value } = event.target
-    console.log({ name, value })
     setPatient({ ...patient, [name]: value })
   }
 
-  const handleCreate = () => {
-    console.log(patient)
-    PatientServices.create(patient)
+  const handleCreate = async () => {
+    await PatientServices.create(patient)
+    createModal.handleClose()
+    reloadData()
   }
 
   const handleEdit = async () => {
-    PatientServices.update(patient.id, { patient })
+    await PatientServices.update(patient.id, patient)
+    editModal.handleClose()
+    reloadData()
   }
 
-  const handleDelete = () => {
-    PatientServices.delete(patient.id)
+  const handleDelete = async () => {
+    await PatientServices.delete(patient.id)
+    deleteModal.handleClose()
+    reloadData()
   }
 
   const handleSearch = (event) => {
@@ -82,14 +85,14 @@ function Patients () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && data && (
+        {!error && !loading && patients && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: data.page,
-            totalPages: data.totalPages,
-            results: data.results,
-            totalResults: data.totalResults,
+            page: patients.page,
+            totalPages: patients.totalPages,
+            results: patients.results,
+            totalResults: patients.totalResults,
             limit
           }}
           >
@@ -100,7 +103,7 @@ function Patients () {
             </TableHead>
             <TableBody>
               {
-                data.data
+                patients.data
                   ?.filter(item => item.id.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_patient) => (
                     <tr
@@ -135,6 +138,8 @@ function Patients () {
         <div className='flex flex-col gap-y-2 p-4'>
 
           <DisabledFormInput
+            id='id'
+            name='id'
             title='ID Patient'
             value={patient.id}
           />
@@ -142,8 +147,10 @@ function Patients () {
           <div className='flex flex-col gap-3'>
 
             <DisabledFormInput
+              id='status'
+              name='status'
               title='Status'
-              value={patient.status ? 'Active' : 'No Active'}
+              value={patient.status ? 'Active' : 'Inactive'}
             />
 
           </div>
@@ -162,17 +169,21 @@ function Patients () {
             <div className='flex flex-col gap-3'>
 
               <FormInputText
+                id='id'
+                name='id'
                 title='ID Patient'
                 value={patient.id}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputSelect
+                id='status'
+                name='status'
                 title='Status'
                 value={patient.status}
                 handleDataChange={handleDataChange}
                 options={[
-                  { option: 'No Active', value: false },
+                  { option: 'Inactive', value: false },
                   { option: 'Active', value: true }
                 ]}
               />
@@ -193,6 +204,8 @@ function Patients () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Patient'
               value={patient.id}
             />
@@ -200,11 +213,13 @@ function Patients () {
             <div className='flex flex-col gap-3'>
 
               <FormInputSelect
+                id='status'
+                name='status'
                 title='Status'
                 value={patient.status}
                 handleDataChange={handleDataChange}
                 options={[
-                  { option: 'No Active', value: false },
+                  { option: 'Inactive', value: false },
                   { option: 'Active', value: true }
                 ]}
               />
@@ -225,6 +240,8 @@ function Patients () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Patient'
               value={patient.id}
             />
@@ -232,8 +249,10 @@ function Patients () {
             <div className='flex flex-col gap-3'>
 
               <DisabledFormInput
+                id='status'
+                name='status'
                 title='Status'
-                value={patient.status ? 'Active' : 'No Active'}
+                value={patient.status ? 'Active' : 'Inactive'}
               />
 
             </div>
