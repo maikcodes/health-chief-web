@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 
 function useFetch ({ fetchFunction, page, limit }) {
   const [data, setData] = useState({})
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true)
       const fetchedData = await fetchFunction(page, limit)
@@ -15,13 +15,13 @@ function useFetch ({ fetchFunction, page, limit }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [fetchFunction, page, limit])
 
   useEffect(() => {
     fetchData()
-  }, [page, limit])
+  }, [fetchData])
 
-  return { data, error, loading }
+  return { data, error, loading, reloadData: fetchData }
 }
 
 export default useFetch
