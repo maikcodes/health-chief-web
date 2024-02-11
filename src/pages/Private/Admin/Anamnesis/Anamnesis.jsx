@@ -14,9 +14,8 @@ import { useState } from 'react'
 
 function Anamnesis () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data, error, loading } = UseFetch({ fetchFunction: AnamnesisServices.getAll, page, limit })
+  const { data: fetchedAnamnesis, error, loading, reloadData } = UseFetch({ fetchFunction: AnamnesisServices.getAll, page, limit })
   const [anamnesis, setAnamnesis] = useState({
-    id: '',
     bloodType: '',
     personalSurgicalHistory: '',
     personalPathologicalHistory: '',
@@ -36,9 +35,9 @@ function Anamnesis () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = data.data
-    const filteredPerson = persons.find((element) => element.id === id)
-    setAnamnesis(filteredPerson)
+    const anamnesisData = fetchedAnamnesis.data
+    const filteredAnamnesis = anamnesisData.find((element) => element.id === id)
+    setAnamnesis(filteredAnamnesis)
     modalOpenHandler()
   }
 
@@ -47,16 +46,22 @@ function Anamnesis () {
     setAnamnesis({ ...anamnesis, [name]: value })
   }
 
-  const handleCreate = () => {
-    AnamnesisServices.create(anamnesis)
+  const handleCreate = async () => {
+    await AnamnesisServices.create(anamnesis)
+    createModal.handleClose()
+    reloadData()
   }
 
   const handleEdit = async () => {
-    AnamnesisServices.update(anamnesis.id, { anamnesis })
+    await AnamnesisServices.update(anamnesis.id, anamnesis)
+    editModal.handleClose()
+    reloadData()
   }
 
-  const handleDelete = () => {
-    AnamnesisServices.delete(anamnesis.id)
+  const handleDelete = async () => {
+    await AnamnesisServices.delete(anamnesis.id)
+    deleteModal.handleClose()
+    reloadData()
   }
 
   const handleSearch = (event) => {
@@ -75,7 +80,7 @@ function Anamnesis () {
             className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
             onSubmit={(event) => { event.preventDefault() }}
           >
-            <SearchInput placeholder='Search persons' handleChange={handleSearch} />
+            <SearchInput placeholder='Search anamnesis' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
           </form>
         </div>
@@ -83,14 +88,14 @@ function Anamnesis () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && data && (
+        {!error && !loading && fetchedAnamnesis && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: data.page,
-            totalPages: data.totalPages,
-            results: data.results,
-            totalResults: data.totalResults,
+            page: fetchedAnamnesis.page,
+            totalPages: fetchedAnamnesis.totalPages,
+            results: fetchedAnamnesis.results,
+            totalResults: fetchedAnamnesis.totalResults,
             limit
           }}
           >
@@ -101,7 +106,7 @@ function Anamnesis () {
             </TableHead>
             <TableBody>
               {
-                data.data
+                fetchedAnamnesis.data
                   ?.filter(item => item.id.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_anamnesis) => (
                     <tr
@@ -138,27 +143,37 @@ function Anamnesis () {
           <DisabledText text={anamnesis.id} />
 
           <DisabledFormInput
+            id='bloodType'
+            name='bloodType'
             title='Blood Type'
             value={anamnesis.bloodType}
           />
 
           <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
             <FormTextArea
+              id='personalSurgicalHistory'
+              name='personalSurgicalHistory'
               title='Personal Surgical History'
               value={anamnesis.personalSurgicalHistory}
               isDisabled
             />
             <FormTextArea
+              id='personalPathologicalHistory'
+              name='personalPathologicalHistory'
               title='Personal Pathological History'
               value={anamnesis.personalPathologicalHistory}
               isDisabled
             />
             <FormTextArea
+              id='familyPathologicalHistory'
+              name='familyPathologicalHistory'
               title='Family Pathological History'
               value={anamnesis.familyPathologicalHistory}
               isDisabled
             />
             <FormTextArea
+              id='allergies'
+              name='allergies'
               title='Allergies'
               value={anamnesis.allergies}
               isDisabled
@@ -177,11 +192,15 @@ function Anamnesis () {
         <form action=''>
           <div className='p-4 flex flex-col lg:grid lg:grid-cols-2 gap-3'>
             <FormInputText
+              id='id'
+              name='id'
               title='ID'
               value={anamnesis.id}
               handleDataChange={handleDataChange}
             />
             <FormInputSelect
+              id='bloodType'
+              name='bloodType'
               title='Blood Type'
               value={anamnesis.bloodType}
               handleDataChange={handleDataChange}
@@ -191,21 +210,29 @@ function Anamnesis () {
               ]}
             />
             <FormTextArea
+              id='personalSurgicalHistory'
+              name='personalSurgicalHistory'
               title='Personal Surgical History'
               value={anamnesis.personalSurgicalHistory}
               handleDataChange={handleDataChange}
             />
             <FormTextArea
+              id='personalPathologicalHistory'
+              name='personalPathologicalHistory'
               title='Personal Pathological History'
               value={anamnesis.personalPathologicalHistory}
               handleDataChange={handleDataChange}
             />
             <FormTextArea
+              id='familyPathologicalHistory'
+              name='familyPathologicalHistory'
               title='Family Pathological History'
               value={anamnesis.familyPathologicalHistory}
               handleDataChange={handleDataChange}
             />
             <FormTextArea
+              id='allergies'
+              name='allergies'
               title='Allergies'
               value={anamnesis.allergies}
               handleDataChange={handleDataChange}
@@ -227,6 +254,8 @@ function Anamnesis () {
             <DisabledText text={anamnesis.id} />
 
             <FormInputSelect
+              id='bloodType'
+              name='bloodType'
               title='Blood Type'
               value={anamnesis.bloodType}
               handleDataChange={handleDataChange}
@@ -238,21 +267,29 @@ function Anamnesis () {
 
             <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
               <FormTextArea
+                id='personalSurgicalHistory'
+                name='personalSurgicalHistory'
                 title='Personal Surgical History'
                 value={anamnesis.personalSurgicalHistory}
                 handleDataChange={handleDataChange}
               />
               <FormTextArea
+                id='personalPathologicalHistory'
+                name='personalPathologicalHistory'
                 title='Personal Pathological History'
                 value={anamnesis.personalPathologicalHistory}
                 handleDataChange={handleDataChange}
               />
               <FormTextArea
+                id='familyPathologicalHistory'
+                name='familyPathologicalHistory'
                 title='Family Pathological History'
                 value={anamnesis.familyPathologicalHistory}
                 handleDataChange={handleDataChange}
               />
               <FormTextArea
+                id='allergies'
+                name='allergies'
                 title='Allergies'
                 value={anamnesis.allergies}
                 handleDataChange={handleDataChange}
@@ -275,27 +312,37 @@ function Anamnesis () {
             <DisabledText text={anamnesis.id} />
 
             <DisabledFormInput
+              id='bloodType'
+              name='bloodType'
               title='Blood Type'
               value={anamnesis.bloodType}
             />
 
             <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
               <FormTextArea
+                id='personalSurgicalHistory'
+                name='personalSurgicalHistory'
                 title='Personal Surgical History'
                 value={anamnesis.personalSurgicalHistory}
                 isDisabled
               />
               <FormTextArea
+                id='personalPathologicalHistory'
+                name='personalPathologicalHistory'
                 title='Personal Pathological History'
                 value={anamnesis.personalPathologicalHistory}
                 isDisabled
               />
               <FormTextArea
+                id='familyPathologicalHistory'
+                name='familyPathologicalHistory'
                 title='Family Pathological History'
                 value={anamnesis.familyPathologicalHistory}
                 isDisabled
               />
               <FormTextArea
+                id='allergies'
+                name='allergies'
                 title='Allergies'
                 value={anamnesis.allergies}
                 isDisabled
