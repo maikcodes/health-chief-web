@@ -1,20 +1,24 @@
 import { AdminLayout } from '@components/Layouts'
-import { AdminTable, RowOptions, TableBody, TableHead } from '@components/Tables'
+import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@components/Tables'
 import { ButtonPrimary } from '@components/Buttons'
 import { DisabledText, PanelTitle } from '@components/Texts'
 import { Error } from '@components/Errors'
 import { Modal } from '@components/Dialogs'
-import { SearchInput, TextInput } from '@components/Inputs'
+import { SearchInput } from '@components/Inputs'
 import { UserServices } from '@services/User'
 import { Spinner } from '@components/Spinners'
 
 import { UseFetch, useModal, UsePagination } from '@hooks'
 import { useState } from 'react'
+import { DisabledFormInput, FormInputText } from '@components/Forms'
 
 function Users () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data, error, loading } = UseFetch({ fetchFunction: UserServices.getAll, page, limit })
+  const { data: users, error, loading, reloadData } = UseFetch({ fetchFunction: UserServices.getAll, page, limit })
   const [user, setUser] = useState({})
+
+  const [search, setSearch] = useState('')
+
   const createModal = useModal()
   const viewModal = useModal()
   const editModal = useModal()
@@ -22,18 +26,15 @@ function Users () {
 
   const handleEmptyModal = (modalOpenHandler) => {
     setUser({
-      firstNames: '',
-      lastNames: '',
-      image: '',
       email: '',
-      phone: ''
+      password: ''
     })
     modalOpenHandler()
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const users = data.data
-    const filteredUser = users.filter((_user) => _user.id === id)[0]
+    const usersData = users.data
+    const filteredUser = usersData.filter((_user) => _user.id === id)[0]
     setUser(filteredUser)
     modalOpenHandler()
   }
@@ -43,16 +44,27 @@ function Users () {
     setUser({ ...user, [name]: value })
   }
 
-  const handleCreate = () => {
-    console.log('creating user', JSON.stringify(user))
+  const handleCreate = async () => {
+    await UserServices.create(user)
+    createModal.handleClose()
+    reloadData()
   }
 
-  const handleEdit = () => {
-    console.log('editing user', JSON.stringify(user))
+  const handleEdit = async () => {
+    await UserServices.update(user.id, user)
+    editModal.handleClose()
+    reloadData()
   }
 
-  const handleDelete = () => {
-    console.log('deleting user', JSON.stringify(user))
+  const handleDelete = async () => {
+    await UserServices.delete(user.id)
+    deleteModal.handleClose()
+    reloadData()
+  }
+
+  const handleSearch = (event) => {
+    const value = event.target.value
+    setSearch(value)
   }
 
   return (
@@ -62,66 +74,57 @@ function Users () {
         <div className='flex flex-col gap-y-2'>
           <PanelTitle text='Users' />
 
-          <div className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'>
-            <SearchInput placeholder='Search users' />
+          <form
+            className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
+            onSubmit={(event) => { event.preventDefault() }}
+          >
+            <SearchInput placeholder='Search users' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
-          </div>
+          </form>
         </div>
 
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && data && (
+        {!error && !loading && users && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: data.page,
-            totalPages: data.totalPages,
-            results: data.results,
-            totalResults: data.totalResults,
+            page: users.page,
+            totalPages: users.totalPages,
+            results: users.results,
+            totalResults: users.totalResults,
             limit
           }}
           >
             <TableHead>
-              <td className='px-4 py-2 text-center'>id</td>
-              <th className='px-4 py-2 w-72'>name</th>
-              <th className='px-4 py-2'>email</th>
-              <th className='px-4 py-2'>phone</th>
-              <th className='px-4 py-2 text-center'>settings</th>
+              <TableHeader>id</TableHeader>
+              <TableHeader>email</TableHeader>
+              <TableHeader>settings</TableHeader>
             </TableHead>
             <TableBody>
-              {data.data?.map((user) => (
-                <tr
-                  key={user.id}
-                  className='lg:hover:bg-gray-300'
-                >
-                  <td className='px-4 py-2 font-bold text-center'>{user.id}</td>
-                  <td className='px-4 py-2 capitalize flex w-72 md:w-62 flex-row items-center gap-x-2'>
-                    <div className='w-12 h-12 rounded-full overflow-hidden border-2 border-biscay-600'>
-                      <img src={user.image} alt={`${user.firstNames} ${user.lastNames}`} />
-                    </div>
-                    <div className='flex flex-col'>
-                      <p className='font-bold'>
-                        {user.firstNames}
-                      </p>
-                      <p className='font-bold'>
-                        {user.lastNames}
-                      </p>
-                    </div>
-                  </td>
-                  <td className='px-4 py-2'>{user.email}</td>
-                  <td className='px-4 py-2'>{user.phone}</td>
-                  <td className='px-4 py-2'>
-                    <div className='flex flex-row items-center justify-center gap-x-4'>
-                      <RowOptions
-                        onViewCLick={() => handleOpenModal(viewModal.handleOpen, user.id)}
-                        onEditClick={() => handleOpenModal(editModal.handleOpen, user.id)}
-                        onDeleteClick={() => handleOpenModal(deleteModal.handleOpen, user.id)}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {
+                users.data
+                  ?.filter(item => item.id.includes(search.toLowerCase()))
+                  ?.map((_user) => (
+                    <tr
+                      key={_user.id}
+                      className='lg:hover:bg-gray-300'
+                    >
+                      <td className='px-4 py-2 text-center'>{_user.id}</td>
+                      <td className='px-4 py-2 text-center'>{_user.email}</td>
+                      <td className='px-4 py-2'>
+                        <div className='flex flex-row items-center justify-center gap-x-4'>
+                          <RowOptions
+                            onViewCLick={() => handleOpenModal(viewModal.handleOpen, _user.id)}
+                            onEditClick={() => handleOpenModal(editModal.handleOpen, _user.id)}
+                            onDeleteClick={() => handleOpenModal(deleteModal.handleOpen, _user.id)}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+              }
             </TableBody>
           </AdminTable>
         )}
@@ -133,28 +136,17 @@ function Users () {
         isOpen={viewModal.isOpen}
         onClose={viewModal.handleClose}
       >
-        <div className='flex items-center justify-center'>
-          <img
-            src={user.image}
-            alt={`${user.firstNames} ${user.lastNames}`}
-            className='w-32 h-32 rounded-full'
-          />
-        </div>
         <div className='flex flex-col gap-y-2 p-4'>
+
           <DisabledText text={user.id} />
 
-          <p className='font-bold'>Full Name:</p>
-          <DisabledText text={user.firstNames + ' ' + user.lastNames} />
-
-          <div className='grid grid-cols-2 gap-4'>
-            <div>
-              <p className='font-bold'>Email:</p>
-              <DisabledText text={user.email} />
-            </div>
-            <div>
-              <p className='font-bold'>Phone:</p>
-              <DisabledText text={user.phone} />
-            </div>
+          <div className='flex flex-col gap-3'>
+            <DisabledFormInput
+              id='email'
+              name='email'
+              title='ID Card'
+              value={user.email}
+            />
           </div>
         </div>
       </Modal>
@@ -167,56 +159,29 @@ function Users () {
         onClose={createModal.handleClose}
       >
         <form action=''>
-          <div className='flex items-center justify-center'>
-            <input type='file' onChange={handleDataChange} />
-          </div>
           <div className='flex flex-col gap-y-2 p-4'>
-
-            <div className='grid grid-cols-2 gap-4'>
-              <div className='flex flex-col gap-y-2'>
-                <div className='flex flex-col'>
-                  <label htmlFor='firstNames' className='font-bold'>First names:</label>
-                  <TextInput
-                    name='firstNames'
-                    id='firstNames'
-                    value={user.firstNames}
-                    handleDataChange={handleDataChange}
-                    placeholder='Insert first names'
-                  />
-                </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='email' className='font-bold'>Email:</label>
-                  <TextInput
-                    name='email'
-                    id='email'
-                    value={user.email}
-                    handleDataChange={handleDataChange}
-                    placeholder='Insert email'
-                  />
-                </div>
-              </div>
-              <div className='flex flex-col gap-y-2'>
-                <div className='flex flex-col'>
-                  <label htmlFor='lastNames' className='font-bold'>Last names:</label>
-                  <TextInput
-                    name='lastNames'
-                    id='lastNames'
-                    value={user.lastNames}
-                    handleDataChange={handleDataChange}
-                    placeholder='Insert last names'
-                  />
-                </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='phone' className='font-bold'>Phone:</label>
-                  <TextInput
-                    name='phone'
-                    id='phone'
-                    value={user.phone}
-                    handleDataChange={handleDataChange}
-                    placeholder='Insert phone'
-                  />
-                </div>
-              </div>
+            <div className='flex flex-col gap-3'>
+              <FormInputText
+                id='id'
+                name='id'
+                title='User ID'
+                value={user.id}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                id='email'
+                name='email'
+                title='Email'
+                value={user.email}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                id='password'
+                name='password'
+                title='Password'
+                value={user.password}
+                handleDataChange={handleDataChange}
+              />
             </div>
           </div>
         </form>
@@ -230,62 +195,29 @@ function Users () {
         onClose={editModal.handleClose}
       >
         <form action=''>
-          <div className='flex items-center justify-center'>
-            <img
-              src={user.image}
-              alt={`${user.firstNames} ${user.lastNames}`}
-              className='w-32 h-32 rounded-full'
-            />
-          </div>
           <div className='flex flex-col gap-y-2 p-4'>
-
-            <DisabledText text={user.id} />
-
-            <div className='grid grid-cols-2 gap-4'>
-              <div className='flex flex-col gap-y-2'>
-                <div className='flex flex-col'>
-                  <label htmlFor='firstNames' className='font-bold'>First names:</label>
-                  <TextInput
-                    name='firstNames'
-                    id='firstNames'
-                    value={user.firstNames}
-                    handleDataChange={handleDataChange}
-                    placeholder='Insert first names'
-                  />
-                </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='email' className='font-bold'>Email:</label>
-                  <TextInput
-                    name='email'
-                    id='email'
-                    value={user.email}
-                    handleDataChange={handleDataChange}
-                    placeholder='Insert email'
-                  />
-                </div>
-              </div>
-              <div className='flex flex-col gap-y-2'>
-                <div className='flex flex-col'>
-                  <label htmlFor='lastNames' className='font-bold'>Last names:</label>
-                  <TextInput
-                    name='lastNames'
-                    id='lastNames'
-                    value={user.lastNames}
-                    handleDataChange={handleDataChange}
-                    placeholder='Insert last names'
-                  />
-                </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='phone' className='font-bold'>Phone:</label>
-                  <TextInput
-                    name='phone'
-                    id='phone'
-                    value={user.phone}
-                    handleDataChange={handleDataChange}
-                    placeholder='Insert phone'
-                  />
-                </div>
-              </div>
+            <div className='flex flex-col gap-3'>
+              <FormInputText
+                id='id'
+                name='id'
+                title='User ID'
+                value={user.id}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                id='email'
+                name='email'
+                title='Email'
+                value={user.email}
+                handleDataChange={handleDataChange}
+              />
+              <FormInputText
+                id='password'
+                name='password'
+                title='Password'
+                value={user.password}
+                handleDataChange={handleDataChange}
+              />
             </div>
           </div>
         </form>
@@ -299,46 +231,17 @@ function Users () {
         onClose={deleteModal.handleClose}
       >
         <form action=''>
-          <div className='flex items-center justify-center'>
-            <img
-              src={user.image}
-              alt={`${user.firstNames} ${user.lastNames}`}
-              className='w-32 h-32 rounded-full'
-            />
-          </div>
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledText text={user.id} />
 
-            <div className='grid grid-cols-2 gap-4'>
-              <div className='flex flex-col gap-y-2'>
-                <div className='flex flex-col'>
-                  <label htmlFor='firstNames' className='font-bold'>First names:</label>
-                  <DisabledText
-                    text={user.firstNames}
-                  />
-                </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='email' className='font-bold'>Email:</label>
-                  <DisabledText
-                    text={user.email}
-                  />
-                </div>
-              </div>
-              <div className='flex flex-col gap-y-2'>
-                <div className='flex flex-col'>
-                  <label htmlFor='lastNames' className='font-bold'>Last names:</label>
-                  <DisabledText
-                    text={user.lastNames}
-                  />
-                </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='phone' className='font-bold'>Phone:</label>
-                  <DisabledText
-                    text={user.phone}
-                  />
-                </div>
-              </div>
+            <div className='flex flex-col gap-3'>
+              <DisabledFormInput
+                id='email'
+                name='email'
+                title='ID Card'
+                value={user.email}
+              />
             </div>
           </div>
         </form>
