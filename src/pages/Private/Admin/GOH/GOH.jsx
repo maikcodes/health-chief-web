@@ -14,7 +14,7 @@ import { useState } from 'react'
 
 function GOH () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data, error, loading } = UseFetch({ fetchFunction: GOHServices.getAll, page, limit })
+  const { data: fetchedGOH, error, loading, reloadData } = UseFetch({ fetchFunction: GOHServices.getAll, page, limit })
   const [goh, setGoh] = useState({
     id: '',
     menarche: '',
@@ -44,9 +44,9 @@ function GOH () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = data.data
-    const filteredPerson = persons.find((element) => element.id === id)
-    setGoh(filteredPerson)
+    const gohData = fetchedGOH.data
+    const filteredGOH = gohData.find((element) => element.id === id)
+    setGoh(filteredGOH)
     modalOpenHandler()
   }
 
@@ -55,16 +55,22 @@ function GOH () {
     setGoh({ ...goh, [name]: value })
   }
 
-  const handleCreate = () => {
-    GOHServices.create(goh)
+  const handleCreate = async () => {
+    await GOHServices.create(goh)
+    createModal.handleClose()
+    reloadData()
   }
 
   const handleEdit = async () => {
-    GOHServices.update(goh.id, { goh })
+    await GOHServices.update(goh.id, goh)
+    editModal.handleClose()
+    reloadData()
   }
 
-  const handleDelete = () => {
-    GOHServices.delete(goh.id)
+  const handleDelete = async () => {
+    await GOHServices.delete(goh.id)
+    deleteModal.handleClose()
+    reloadData()
   }
 
   const handleSearch = (event) => {
@@ -83,7 +89,7 @@ function GOH () {
             className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
             onSubmit={(event) => { event.preventDefault() }}
           >
-            <SearchInput placeholder='Search persons' handleChange={handleSearch} />
+            <SearchInput placeholder='Search gynecological obstetric histories' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
           </form>
         </div>
@@ -91,14 +97,14 @@ function GOH () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && data && (
+        {!error && !loading && fetchedGOH && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: data.page,
-            totalPages: data.totalPages,
-            results: data.results,
-            totalResults: data.totalResults,
+            page: fetchedGOH.page,
+            totalPages: fetchedGOH.totalPages,
+            results: fetchedGOH.results,
+            totalResults: fetchedGOH.totalResults,
             limit
           }}
           >
@@ -109,7 +115,7 @@ function GOH () {
             </TableHead>
             <TableBody>
               {
-                data.data
+                fetchedGOH.data
                   ?.filter(item => item.id.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_goh) => (
                     <tr
@@ -144,68 +150,94 @@ function GOH () {
         <div className='flex flex-col gap-y-2 p-4'>
 
           <DisabledFormInput
-            title='ID Gynecological Obstetrical History'
+            id='id'
+            name='id'
+            title='Gynecological Obstetrical History ID'
             value={goh.id}
           />
 
           <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
             <DisabledFormInput
+              id='menarche'
+              name='menarche'
               title='Menarche'
               value={goh.menarche}
             />
 
             <DisabledFormInput
+              id='lastMenstruationDate'
+              name='lastMenstruationDate'
               title='Last Menstruation Date'
               value={goh.lastMenstruationDate}
             />
 
             <DisabledFormInput
+              id='menstrualCycle'
+              name='menstrualCycle'
               title='Menstruation Cycle'
               value={goh.menstrualCycle}
             />
 
             <DisabledFormInput
+              id='menstrualCycleDuration'
+              name='menstrualCycleDuration'
               title='Menstruation Cycle Duration'
               value={goh.menstrualCycleDuration}
             />
 
             <DisabledFormInput
+              id='dysmenorrhea'
+              name='dysmenorrhea'
               title='Dysmenorrhea'
               value={goh.dysmenorrhea ? 'YES' : 'NO'}
             />
 
             <DisabledFormInput
+              id='pregnanciesCount'
+              name='pregnanciesCount'
               title='Pregnancies Count'
               value={goh.pregnanciesCount}
             />
 
             <DisabledFormInput
+              id='abortionsCount'
+              name='abortionsCount'
               title='Abortions Count'
               value={goh.abortionsCount}
             />
 
             <DisabledFormInput
+              id='cesareansCount'
+              name='cesareansCount'
               title='Cesareans Count'
               value={goh.cesareansCount}
             />
 
             <DisabledFormInput
+              id='normalDeliveriesCount'
+              name='normalDeliveriesCount'
               title='Normal Deliveries Count'
               value={goh.normalDeliveriesCount}
             />
 
             <DisabledFormInput
+              id='liveChildren'
+              name='liveChildren'
               title='Live Children'
               value={goh.liveChildren}
             />
 
             <DisabledFormInput
+              id='sexualDebutAge'
+              name='sexualDebutAge'
               title='Sexual Debut Age'
               value={goh.sexualDebutAge ?? 'No'}
             />
 
             <DisabledFormInput
+              id='sexualPartnersCount'
+              name='sexualPartnersCount'
               title='Sexual Partners Count'
               value={goh.sexualPartnersCount}
             />
@@ -213,6 +245,8 @@ function GOH () {
             <div className='col-span-2'>
 
               <FormTextArea
+                id='contraceptiveMethod'
+                name='contraceptiveMethod'
                 title='Conceptive Method'
                 value={goh.contraceptiveMethod}
                 isDisabled
@@ -233,21 +267,34 @@ function GOH () {
       >
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
+            <FormInputText
+              id='id'
+              name='id'
+              title='Gynecological Obstetrical History ID'
+              value={goh.id}
+              handleDataChange={handleDataChange}
+            />
             <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
               <FormInputDate
+                id='menarche'
+                name='menarche'
                 title='Menarche'
                 value={goh.menarche}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputDate
+                id='lastMenstruationDate'
+                name='lastMenstruationDate'
                 title='Last Menstruation Date'
                 value={goh.lastMenstruationDate}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputSelect
+                id='menstrualCycle'
+                name='menstrualCycle'
                 title='Menstruation Cycle'
                 value={goh.menstrualCycle}
                 handleDataChange={handleDataChange}
@@ -258,12 +305,16 @@ function GOH () {
               />
 
               <FormInputText
+                id='menstrualCycleDuration'
+                name='menstrualCycleDuration'
                 title='Menstruation Cycle Duration'
                 value={goh.menstrualCycleDuration}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputSelect
+                id='dysmenorrhea'
+                name='dysmenorrhea'
                 title='Dysmenorrhea'
                 value={goh.dysmenorrhea}
                 handleDataChange={handleDataChange}
@@ -274,42 +325,56 @@ function GOH () {
               />
 
               <FormInputText
+                id='pregnanciesCount'
+                name='pregnanciesCount'
                 title='Pregnancies Count'
                 value={goh.pregnanciesCount}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='abortionsCount'
+                name='abortionsCount'
                 title='Abortions Count'
                 value={goh.abortionsCount}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='cesareansCount'
+                name='cesareansCount'
                 title='Cesareans Count'
                 value={goh.cesareansCount}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='normalDeliveriesCount'
+                name='normalDeliveriesCount'
                 title='Normal Deliveries Count'
                 value={goh.normalDeliveriesCount}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='liveChildren'
+                name='liveChildren'
                 title='Live Children'
                 value={goh.liveChildren}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='sexualDebutAge'
+                name='sexualDebutAge'
                 title='Sexual Debut Age'
                 value={goh.sexualDebutAge}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='sexualPartnersCount'
+                name='sexualPartnersCount'
                 title='Sexual Partners Count'
                 value={goh.sexualPartnersCount}
                 handleDataChange={handleDataChange}
@@ -318,6 +383,8 @@ function GOH () {
               <div className='col-span-2'>
 
                 <FormTextArea
+                  id='contraceptiveMethod'
+                  name='contraceptiveMethod'
                   title='Conceptive Method'
                   value={goh.contraceptiveMethod}
                   handleDataChange={handleDataChange}
@@ -340,27 +407,34 @@ function GOH () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <FormInputText
+            <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Gynecological Obstetrical History'
               value={goh.id}
-              handleDataChange={handleDataChange}
             />
 
             <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
               <FormInputDate
+                id='menarche'
+                name='menarche'
                 title='Menarche'
                 value={goh.menarche}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputDate
+                id='lastMenstruationDate'
+                name='lastMenstruationDate'
                 title='Last Menstruation Date'
                 value={goh.lastMenstruationDate}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputSelect
+                id='menstrualCycle'
+                name='menstrualCycle'
                 title='Menstruation Cycle'
                 value={goh.menstrualCycle}
                 handleDataChange={handleDataChange}
@@ -371,12 +445,16 @@ function GOH () {
               />
 
               <FormInputText
+                id='menstrualCycleDuration'
+                name='menstrualCycleDuration'
                 title='Menstruation Cycle Duration'
                 value={goh.menstrualCycleDuration}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputSelect
+                id='dysmenorrhea'
+                name='dysmenorrhea'
                 title='Dysmenorrhea'
                 value={goh.dysmenorrhea}
                 handleDataChange={handleDataChange}
@@ -387,42 +465,56 @@ function GOH () {
               />
 
               <FormInputText
+                id='pregnanciesCount'
+                name='pregnanciesCount'
                 title='Pregnancies Count'
                 value={goh.pregnanciesCount}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='abortionsCount'
+                name='abortionsCount'
                 title='Abortions Count'
                 value={goh.abortionsCount}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='cesareansCount'
+                name='cesareansCount'
                 title='Cesareans Count'
                 value={goh.cesareansCount}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='normalDeliveriesCount'
+                name='normalDeliveriesCount'
                 title='Normal Deliveries Count'
                 value={goh.normalDeliveriesCount}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='liveChildren'
+                name='liveChildren'
                 title='Live Children'
                 value={goh.liveChildren}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='sexualDebutAge'
+                name='sexualDebutAge'
                 title='Sexual Debut Age'
                 value={goh.sexualDebutAge}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='sexualPartnersCount'
+                name='sexualPartnersCount'
                 title='Sexual Partners Count'
                 value={goh.sexualPartnersCount}
                 handleDataChange={handleDataChange}
@@ -431,6 +523,8 @@ function GOH () {
               <div className='col-span-2'>
 
                 <FormTextArea
+                  id='contraceptiveMethod'
+                  name='contraceptiveMethod'
                   title='Conceptive Method'
                   value={goh.contraceptiveMethod}
                   handleDataChange={handleDataChange}
@@ -454,6 +548,8 @@ function GOH () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Gynecological Obstetrical History'
               value={goh.id}
             />
@@ -461,61 +557,85 @@ function GOH () {
             <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
               <DisabledFormInput
+                id='menarche'
+                name='menarche'
                 title='Menarche'
                 value={goh.menarche}
               />
 
               <DisabledFormInput
+                id='lastMenstruationDate'
+                name='lastMenstruationDate'
                 title='Last Menstruation Date'
                 value={goh.lastMenstruationDate}
               />
 
               <DisabledFormInput
+                id='menstrualCycle'
+                name='menstrualCycle'
                 title='Menstruation Cycle'
                 value={goh.menstrualCycle}
               />
 
               <DisabledFormInput
+                id='menstrualCycleDuration'
+                name='menstrualCycleDuration'
                 title='Menstruation Cycle Duration'
                 value={goh.menstrualCycleDuration}
               />
 
               <DisabledFormInput
+                id='dysmenorrhea'
+                name='dysmenorrhea'
                 title='Dysmenorrhea'
                 value={goh.dysmenorrhea ? 'YES' : 'NO'}
               />
 
               <DisabledFormInput
+                id='pregnanciesCount'
+                name='pregnanciesCount'
                 title='Pregnancies Count'
                 value={goh.pregnanciesCount}
               />
 
               <DisabledFormInput
+                id='abortionsCount'
+                name='abortionsCount'
                 title='Abortions Count'
                 value={goh.abortionsCount}
               />
 
               <DisabledFormInput
+                id='cesareansCount'
+                name='cesareansCount'
                 title='Cesareans Count'
                 value={goh.cesareansCount}
               />
 
               <DisabledFormInput
+                id='normalDeliveriesCount'
+                name='normalDeliveriesCount'
                 title='Normal Deliveries Count'
                 value={goh.normalDeliveriesCount}
               />
 
               <DisabledFormInput
+                id='liveChildren'
+                name='liveChildren'
                 title='Live Children'
                 value={goh.liveChildren}
               />
 
               <DisabledFormInput
+                id='sexualDebutAge'
+                name='sexualDebutAge'
                 title='Sexual Debut Age'
                 value={goh.sexualDebutAge ?? 'No'}
               />
 
               <DisabledFormInput
+                id='sexualPartnersCount'
+                name='sexualPartnersCount'
                 title='Sexual Partners Count'
                 value={goh.sexualPartnersCount}
               />
@@ -523,6 +643,8 @@ function GOH () {
               <div className='col-span-2'>
 
                 <FormTextArea
+                  id='conceptiveMethod'
+                  name='conceptiveMethod'
                   title='Conceptive Method'
                   value={goh.contraceptiveMethod}
                   isDisabled
