@@ -14,9 +14,8 @@ import { useState } from 'react'
 
 function Appointments () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data, error, loading } = UseFetch({ fetchFunction: AppointmentServices.getAll, page, limit })
+  const { data: fetchedAppointments, error, loading, reloadData } = UseFetch({ fetchFunction: AppointmentServices.getAll, page, limit })
   const [appointment, setAppointment] = useState({
-    id: '',
     idPreviousAppointment: '',
     idPatient: '',
     idDoctor: '',
@@ -38,9 +37,9 @@ function Appointments () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = data.data
-    const filteredPerson = persons.find((element) => element.id === id)
-    setAppointment(filteredPerson)
+    const appointmentsData = fetchedAppointments.data
+    const filteredAAppointment = appointmentsData.find((element) => element.id === id)
+    setAppointment(filteredAAppointment)
     modalOpenHandler()
   }
 
@@ -49,16 +48,22 @@ function Appointments () {
     setAppointment({ ...appointment, [name]: value })
   }
 
-  const handleCreate = () => {
-    AppointmentServices.create(appointment)
+  const handleCreate = async () => {
+    await AppointmentServices.create(appointment)
+    createModal.handleClose()
+    reloadData()
   }
 
   const handleEdit = async () => {
-    AppointmentServices.update(appointment.id, { appointment })
+    await AppointmentServices.update(appointment.id, appointment)
+    editModal.handleClose()
+    reloadData()
   }
 
-  const handleDelete = () => {
-    AppointmentServices.delete(appointment.id)
+  const handleDelete = async () => {
+    await AppointmentServices.delete(appointment.id)
+    deleteModal.handleClose()
+    reloadData()
   }
 
   const handleSearch = (event) => {
@@ -77,7 +82,7 @@ function Appointments () {
             className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
             onSubmit={(event) => { event.preventDefault() }}
           >
-            <SearchInput placeholder='Search persons' handleChange={handleSearch} />
+            <SearchInput placeholder='Search appointments' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
           </form>
         </div>
@@ -85,14 +90,14 @@ function Appointments () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && data && (
+        {!error && !loading && fetchedAppointments && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: data.page,
-            totalPages: data.totalPages,
-            results: data.results,
-            totalResults: data.totalResults,
+            page: fetchedAppointments.page,
+            totalPages: fetchedAppointments.totalPages,
+            results: fetchedAppointments.results,
+            totalResults: fetchedAppointments.totalResults,
             limit
           }}
           >
@@ -105,7 +110,7 @@ function Appointments () {
             </TableHead>
             <TableBody>
               {
-                data.data
+                fetchedAppointments.data
                   ?.filter(item => item.id.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_appointment) => (
                     <tr
@@ -143,27 +148,37 @@ function Appointments () {
           <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Appointment'
               value={appointment.id}
             />
 
             <DisabledFormInput
+              id='idPreviousAppointment'
+              name='idPreviousAppointment'
               title='ID Previous Appointment'
               value={appointment.idPreviousAppointment ?? 'No previous appointment'}
             />
 
             <DisabledFormInput
+              id='idPatient'
+              name='idPatient'
               title='Patient'
               value={appointment.idPatient}
             />
 
             <DisabledFormInput
+              id='idDoctor'
+              name='idDoctor'
               title='Doctor'
               value={appointment.idDoctor}
             />
 
             <div className='col-span-2'>
               <FormTextArea
+                id='reason'
+                name='reason'
                 title='Reason'
                 value={appointment.reason}
                 isDisabled
@@ -174,16 +189,22 @@ function Appointments () {
               <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
 
                 <DisabledFormInput
+                  id='appointmentDate'
+                  name='appointmentDate'
                   title='Date'
                   value={appointment.appointmentDate}
                 />
 
                 <DisabledFormInput
+                  id='appointmentTime'
+                  name='appointmentTime'
                   title='Time'
                   value={appointment.appointmentTime}
                 />
 
                 <DisabledFormInput
+                  id='status'
+                  name='status'
                   title='Status'
                   value={!appointment.status ? 'Pending' : 'Done'}
                 />
@@ -207,18 +228,24 @@ function Appointments () {
             <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
               <FormInputText
+                id='idPreviousAppointment'
+                name='idPreviousAppointment'
                 title='ID Previous Appointment'
                 value={appointment.idPreviousAppointment}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
-                title='Patient '
+                id='idPatient'
+                name='idPatient'
+                title='Patient'
                 value={appointment.idPatient}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='idDoctor'
+                name='idDoctor'
                 title='Doctor'
                 value={appointment.idDoctor}
                 handleDataChange={handleDataChange}
@@ -226,6 +253,8 @@ function Appointments () {
 
               <div className='col-span-2'>
                 <FormTextArea
+                  id='reason'
+                  name='reason'
                   title='Reason'
                   value={appointment.reason}
                   handleDataChange={handleDataChange}
@@ -236,18 +265,24 @@ function Appointments () {
                 <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
 
                   <FormInputDate
+                    id='appointmentDate'
+                    name='appointmentDate'
                     title='Date'
                     value={appointment.appointmentDate}
                     handleDataChange={handleDataChange}
                   />
 
                   <FormInputTime
+                    id='appointmentTime'
+                    name='appointmentTime'
                     title='Time'
                     value={appointment.appointmentTime}
                     handleDataChange={handleDataChange}
                   />
 
                   <FormInputSelect
+                    id='status'
+                    name='status'
                     title='Status'
                     value={appointment.status}
                     handleDataChange={handleDataChange}
@@ -276,11 +311,15 @@ function Appointments () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Appointment'
               value={appointment.id}
             />
 
             <FormInputText
+              id='idPreviousAppointment'
+              name='idPreviousAppointment'
               title='ID Previous Appointment'
               value={appointment.idPreviousAppointment}
               handleDataChange={handleDataChange}
@@ -289,12 +328,16 @@ function Appointments () {
             <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
               <FormInputText
+                id='idPatient'
+                name='idPatient'
                 title='Patient'
                 value={appointment.idPatient}
                 handleDataChange={handleDataChange}
               />
 
               <FormInputText
+                id='idDoctor'
+                name='idDoctor'
                 title='Doctor'
                 value={appointment.idDoctor}
                 handleDataChange={handleDataChange}
@@ -302,6 +345,8 @@ function Appointments () {
 
               <div className='col-span-2'>
                 <FormTextArea
+                  id='reason'
+                  name='reason'
                   title='Reason'
                   value={appointment.reason}
                   handleDataChange={handleDataChange}
@@ -312,18 +357,24 @@ function Appointments () {
                 <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
 
                   <FormInputDate
+                    id='appointmentDate'
+                    name='appointmentDate'
                     title='Date'
                     value={appointment.appointmentDate}
                     handleDataChange={handleDataChange}
                   />
 
                   <FormInputTime
+                    id='appointmentTime'
+                    name='appointmentTime'
                     title='Time'
                     value={appointment.appointmentTime}
                     handleDataChange={handleDataChange}
                   />
 
                   <FormInputSelect
+                    id='status'
+                    name='status'
                     title='Status'
                     value={appointment.status}
                     handleDataChange={handleDataChange}
@@ -353,27 +404,37 @@ function Appointments () {
             <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
               <DisabledFormInput
+                id='id'
+                name='id'
                 title='ID Appointment'
                 value={appointment.id}
               />
 
               <DisabledFormInput
+                id='idPreviousAppointment'
+                name='idPreviousAppointment'
                 title='ID Previous Appointment'
                 value={appointment.idPreviousAppointment ?? 'No previous appointment'}
               />
 
               <DisabledFormInput
+                id='idPatient'
+                name='idPatient'
                 title='Patient'
                 value={appointment.idPatient}
               />
 
               <DisabledFormInput
+                id='idDoctor'
+                name='idDoctor'
                 title='Doctor'
                 value={appointment.idDoctor}
               />
 
               <div className='col-span-2'>
                 <FormTextArea
+                  id='reason'
+                  name='reason'
                   title='Reason'
                   value={appointment.reason}
                   isDisabled
@@ -384,16 +445,22 @@ function Appointments () {
                 <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
 
                   <DisabledFormInput
+                    id='appointmentDate'
+                    name='appointmentDate'
                     title='Date'
                     value={appointment.appointmentDate}
                   />
 
                   <DisabledFormInput
+                    id='appointmentTime'
+                    name='appointmentTime'
                     title='Time'
                     value={appointment.appointmentTime}
                   />
 
                   <DisabledFormInput
+                    id='status'
+                    name='status'
                     title='Status'
                     value={!appointment.status ? 'Pending' : 'Done'}
                   />
