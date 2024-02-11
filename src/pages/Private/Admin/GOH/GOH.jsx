@@ -16,7 +16,6 @@ function GOH () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
   const { data: fetchedGOH, error, loading, reloadData } = UseFetch({ fetchFunction: GOHServices.getAll, page, limit })
   const [goh, setGoh] = useState({
-    id: '',
     menarche: '',
     lastMenstruationDate: '',
     menstrualCycle: '',

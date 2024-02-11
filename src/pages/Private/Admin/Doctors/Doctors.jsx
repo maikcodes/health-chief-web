@@ -14,9 +14,8 @@ import { useState } from 'react'
 
 function Doctors () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data: doctors, error, loading, reloadData } = UseFetch({ fetchFunction: DoctorServices.getAll, page, limit })
+  const { data: fetchedDoctors, error, loading, reloadData } = UseFetch({ fetchFunction: DoctorServices.getAll, page, limit })
   const [doctor, setDoctor] = useState({
-    id: '',
     idSpecialty: ''
   })
   const [search, setSearch] = useState('')
@@ -32,9 +31,9 @@ function Doctors () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = doctors.data
-    const filteredPerson = persons.find((element) => element.id === id)
-    setDoctor(filteredPerson)
+    const doctorsData = fetchedDoctors.data
+    const filteredDoctor = doctorsData.find((element) => element.id === id)
+    setDoctor(filteredDoctor)
     modalOpenHandler()
   }
 
@@ -77,7 +76,7 @@ function Doctors () {
             className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
             onSubmit={(event) => { event.preventDefault() }}
           >
-            <SearchInput placeholder='Search persons' handleChange={handleSearch} />
+            <SearchInput placeholder='Search doctors' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
           </form>
         </div>
@@ -85,14 +84,14 @@ function Doctors () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && doctors && (
+        {!error && !loading && fetchedDoctors && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: doctors.page,
-            totalPages: doctors.totalPages,
-            results: doctors.results,
-            totalResults: doctors.totalResults,
+            page: fetchedDoctors.page,
+            totalPages: fetchedDoctors.totalPages,
+            results: fetchedDoctors.results,
+            totalResults: fetchedDoctors.totalResults,
             limit
           }}
           >
@@ -103,7 +102,7 @@ function Doctors () {
             </TableHead>
             <TableBody>
               {
-                doctors.data
+                fetchedDoctors.data
                   ?.filter(item => item.id.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_doctor) => (
                     <tr

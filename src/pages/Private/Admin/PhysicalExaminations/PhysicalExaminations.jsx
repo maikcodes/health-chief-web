@@ -39,8 +39,8 @@ function PhysicalExaminations () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const physicalExaminationData = fetchedPE.data
-    const filteredPhysicalExamination = physicalExaminationData.find((element) => element.id === id)
+    const physicalExaminationsData = fetchedPE.data
+    const filteredPhysicalExamination = physicalExaminationsData.find((element) => element.id === id)
     setPhysicalExamination(filteredPhysicalExamination)
     modalOpenHandler()
   }
@@ -84,7 +84,7 @@ function PhysicalExaminations () {
             className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
             onSubmit={(event) => { event.preventDefault() }}
           >
-            <SearchInput placeholder='Search physical examination' handleChange={handleSearch} />
+            <SearchInput placeholder='Search physical examinations' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
           </form>
         </div>

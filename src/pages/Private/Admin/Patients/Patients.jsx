@@ -14,9 +14,8 @@ import { useState } from 'react'
 
 function Patients () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data: patients, error, loading, reloadData } = UseFetch({ fetchFunction: PatientServices.getAll, page, limit })
+  const { data: fetchedPatients, error, loading, reloadData } = UseFetch({ fetchFunction: PatientServices.getAll, page, limit })
   const [patient, setPatient] = useState({
-    id: '',
     status: ''
   })
   const [search, setSearch] = useState('')
@@ -32,9 +31,9 @@ function Patients () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = patients.data
-    const filteredPerson = persons.find((element) => element.id === id)
-    setPatient(filteredPerson)
+    const patientsData = fetchedPatients.data
+    const filteredPatient = patientsData.find((element) => element.id === id)
+    setPatient(filteredPatient)
     modalOpenHandler()
   }
 
@@ -77,7 +76,7 @@ function Patients () {
             className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
             onSubmit={(event) => { event.preventDefault() }}
           >
-            <SearchInput placeholder='Search persons' handleChange={handleSearch} />
+            <SearchInput placeholder='Search patients' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
           </form>
         </div>
@@ -85,14 +84,14 @@ function Patients () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && patients && (
+        {!error && !loading && fetchedPatients && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: patients.page,
-            totalPages: patients.totalPages,
-            results: patients.results,
-            totalResults: patients.totalResults,
+            page: fetchedPatients.page,
+            totalPages: fetchedPatients.totalPages,
+            results: fetchedPatients.results,
+            totalResults: fetchedPatients.totalResults,
             limit
           }}
           >
@@ -103,7 +102,7 @@ function Patients () {
             </TableHead>
             <TableBody>
               {
-                patients.data
+                fetchedPatients.data
                   ?.filter(item => item.id.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_patient) => (
                     <tr

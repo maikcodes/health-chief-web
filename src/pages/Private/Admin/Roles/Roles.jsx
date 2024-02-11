@@ -14,7 +14,7 @@ import { useState } from 'react'
 
 function Roles () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data: rolesData, error, loading, reloadData } = UseFetch({ fetchFunction: RoleServices.getAll, page, limit })
+  const { data: fetchedRoles, error, loading, reloadData } = UseFetch({ fetchFunction: RoleServices.getAll, page, limit })
   const [role, setRole] = useState({
     id: '',
     name: ''
@@ -32,9 +32,9 @@ function Roles () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = rolesData.data
-    const filteredPerson = persons.find((element) => element.id === id)
-    setRole(filteredPerson)
+    const rolesData = fetchedRoles.data
+    const filteredRole = rolesData.find((element) => element.id === id)
+    setRole(filteredRole)
     modalOpenHandler()
   }
 
@@ -77,7 +77,7 @@ function Roles () {
             className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
             onSubmit={(event) => { event.preventDefault() }}
           >
-            <SearchInput placeholder='Search persons' handleChange={handleSearch} />
+            <SearchInput placeholder='Search roles' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
           </form>
         </div>
@@ -85,14 +85,14 @@ function Roles () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && rolesData && (
+        {!error && !loading && fetchedRoles && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: rolesData.page,
-            totalPages: rolesData.totalPages,
-            results: rolesData.results,
-            totalResults: rolesData.totalResults,
+            page: fetchedRoles.page,
+            totalPages: fetchedRoles.totalPages,
+            results: fetchedRoles.results,
+            totalResults: fetchedRoles.totalResults,
             limit
           }}
           >
@@ -103,7 +103,7 @@ function Roles () {
             </TableHead>
             <TableBody>
               {
-                rolesData.data
+                fetchedRoles.data
                   ?.filter(item => item.id.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_role) => (
                     <tr

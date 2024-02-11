@@ -16,7 +16,7 @@ import { useState } from 'react'
 
 function Persons () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data: personsData, error, loading, reloadData } = UseFetch({ fetchFunction: PersonServices.getAll, page, limit })
+  const { data: fetchedPersons, error, loading, reloadData } = UseFetch({ fetchFunction: PersonServices.getAll, page, limit })
   const [person, setPerson] = useState({
     idCard: '',
     names: '',
@@ -42,8 +42,8 @@ function Persons () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = personsData.data
-    const filteredPerson = persons.find((element) => element.id === id)
+    const personsData = fetchedPersons.data
+    const filteredPerson = personsData.find((element) => element.id === id)
     setPerson(filteredPerson)
     modalOpenHandler()
   }
@@ -95,14 +95,14 @@ function Persons () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && personsData && (
+        {!error && !loading && fetchedPersons && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: personsData.page,
-            totalPages: personsData.totalPages,
-            results: personsData.results,
-            totalResults: personsData.totalResults,
+            page: fetchedPersons.page,
+            totalPages: fetchedPersons.totalPages,
+            results: fetchedPersons.results,
+            totalResults: fetchedPersons.totalResults,
             limit
           }}
           >
@@ -115,7 +115,7 @@ function Persons () {
             </TableHead>
             <TableBody>
               {
-                personsData.data
+                fetchedPersons.data
                   ?.filter(item => item.names.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_person) => (
                     <tr

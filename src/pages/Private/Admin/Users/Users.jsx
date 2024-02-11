@@ -14,7 +14,7 @@ import { DisabledFormInput, FormInputText } from '@components/Forms'
 
 function Users () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data: users, error, loading, reloadData } = UseFetch({ fetchFunction: UserServices.getAll, page, limit })
+  const { data: fetchedUsers, error, loading, reloadData } = UseFetch({ fetchFunction: UserServices.getAll, page, limit })
   const [user, setUser] = useState({})
 
   const [search, setSearch] = useState('')
@@ -33,7 +33,7 @@ function Users () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const usersData = users.data
+    const usersData = fetchedUsers.data
     const filteredUser = usersData.filter((_user) => _user.id === id)[0]
     setUser(filteredUser)
     modalOpenHandler()
@@ -86,14 +86,14 @@ function Users () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && users && (
+        {!error && !loading && fetchedUsers && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: users.page,
-            totalPages: users.totalPages,
-            results: users.results,
-            totalResults: users.totalResults,
+            page: fetchedUsers.page,
+            totalPages: fetchedUsers.totalPages,
+            results: fetchedUsers.results,
+            totalResults: fetchedUsers.totalResults,
             limit
           }}
           >
@@ -104,7 +104,7 @@ function Users () {
             </TableHead>
             <TableBody>
               {
-                users.data
+                fetchedUsers.data
                   ?.filter(item => item.id.includes(search.toLowerCase()))
                   ?.map((_user) => (
                     <tr

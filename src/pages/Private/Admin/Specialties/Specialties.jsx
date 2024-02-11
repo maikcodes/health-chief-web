@@ -14,7 +14,7 @@ import { useState } from 'react'
 
 function Specialties () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data: specialties, error, loading, reloadData } = UseFetch({ fetchFunction: SpecialtyServices.getAll, page, limit })
+  const { data: fetchedSpecialties, error, loading, reloadData } = UseFetch({ fetchFunction: SpecialtyServices.getAll, page, limit })
   const [specialty, setSpecialty] = useState({
     id: '',
     name: ''
@@ -32,9 +32,9 @@ function Specialties () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = specialties.data
-    const filteredPerson = persons.find((element) => element.id === id)
-    setSpecialty(filteredPerson)
+    const specialtiesData = fetchedSpecialties.data
+    const filteredSpecialty = specialtiesData.find((element) => element.id === id)
+    setSpecialty(filteredSpecialty)
     modalOpenHandler()
   }
 
@@ -77,7 +77,7 @@ function Specialties () {
             className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
             onSubmit={(event) => { event.preventDefault() }}
           >
-            <SearchInput placeholder='Search persons' handleChange={handleSearch} />
+            <SearchInput placeholder='Search specialties' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
           </form>
         </div>
@@ -85,14 +85,14 @@ function Specialties () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && specialties && (
+        {!error && !loading && fetchedSpecialties && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: specialties.page,
-            totalPages: specialties.totalPages,
-            results: specialties.results,
-            totalResults: specialties.totalResults,
+            page: fetchedSpecialties.page,
+            totalPages: fetchedSpecialties.totalPages,
+            results: fetchedSpecialties.results,
+            totalResults: fetchedSpecialties.totalResults,
             limit
           }}
           >
@@ -103,7 +103,7 @@ function Specialties () {
             </TableHead>
             <TableBody>
               {
-                specialties.data
+                fetchedSpecialties.data
                   ?.filter(item => item.id.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_specialty) => (
                     <tr

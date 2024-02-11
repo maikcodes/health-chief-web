@@ -14,7 +14,7 @@ import { useState } from 'react'
 
 function PersonsRoles () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data: personRolesData, error, loading, reloadData } = UseFetch({ fetchFunction: PersonRoleServices.getAll, page, limit })
+  const { data: fetchedPersonsRoles, error, loading, reloadData } = UseFetch({ fetchFunction: PersonRoleServices.getAll, page, limit })
   const [personRole, setPersonRole] = useState({
     idPerson: '',
     idRole: ''
@@ -32,9 +32,9 @@ function PersonsRoles () {
   }
 
   const handleOpenModal = (modalOpenHandler, idPerson) => {
-    const persons = personRolesData.data
-    const filteredPerson = persons.find((element) => element.idPerson === idPerson)
-    setPersonRole(filteredPerson)
+    const personsRolesData = fetchedPersonsRoles.data
+    const filteredPersonRole = personsRolesData.find((element) => element.idPerson === idPerson)
+    setPersonRole(filteredPersonRole)
     modalOpenHandler()
   }
 
@@ -78,7 +78,7 @@ function PersonsRoles () {
             className='flex flex-col gap-y-2 md:flex-row lg:justify-between lg:items-center'
             onSubmit={(event) => { event.preventDefault() }}
           >
-            <SearchInput placeholder='Search persons' handleChange={handleSearch} />
+            <SearchInput placeholder='Search persons roles' handleChange={handleSearch} />
             <ButtonPrimary text='New' onClick={() => handleEmptyModal(createModal.handleOpen)} />
           </form>
         </div>
@@ -86,14 +86,14 @@ function PersonsRoles () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && personRolesData && (
+        {!error && !loading && fetchedPersonsRoles && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: personRolesData.page,
-            totalPages: personRolesData.totalPages,
-            results: personRolesData.results,
-            totalResults: personRolesData.totalResults,
+            page: fetchedPersonsRoles.page,
+            totalPages: fetchedPersonsRoles.totalPages,
+            results: fetchedPersonsRoles.results,
+            totalResults: fetchedPersonsRoles.totalResults,
             limit
           }}
           >
@@ -104,7 +104,7 @@ function PersonsRoles () {
             </TableHead>
             <TableBody>
               {
-                personRolesData.data
+                fetchedPersonsRoles.data
                   ?.filter(item => item.idPerson.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_personRoles) => (
                     <tr
