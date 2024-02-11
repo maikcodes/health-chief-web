@@ -4,6 +4,7 @@ const SERVER_NAME = import.meta.env.VITE_BACKEND_SERVER_NAME
 
 function mapData (data) {
   return {
+    id: data.id,
     idPerson: data.idPerson,
     idRole: data.idRole,
     createdAt: data.createdAt,
@@ -12,10 +13,10 @@ function mapData (data) {
 }
 
 export class PersonRoleServices {
-  static async get (idPerson, idRole) {
+  static async get (id) {
     try {
       const response = await get(
-        `${SERVER_NAME}/api/v1/person-roles/${idPerson}/${idRole}`
+        `${SERVER_NAME}/api/v1/person-roles/${id}`
       )
       return mapData(response)
     } catch (error) {
@@ -59,10 +60,10 @@ export class PersonRoleServices {
     }
   }
 
-  static async update (idPerson, idRole, data) {
+  static async update (id, data) {
     try {
       await put(
-        `${SERVER_NAME}/api/v1/person-roles/${idPerson}/${idRole}`,
+        `${SERVER_NAME}/api/v1/person-roles/${id}`,
         data
       )
       return {
@@ -79,9 +80,9 @@ export class PersonRoleServices {
     }
   }
 
-  static async delete (idPerson, idRole) {
+  static async delete (id) {
     try {
-      await del(`${SERVER_NAME}/api/v1/person-roles/${idPerson}/${idRole}`)
+      await del(`${SERVER_NAME}/api/v1/person-roles/${id}`)
       return {
         success: true,
         operation: 'delete',
