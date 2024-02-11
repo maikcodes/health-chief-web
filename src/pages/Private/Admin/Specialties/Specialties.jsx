@@ -14,7 +14,7 @@ import { useState } from 'react'
 
 function Specialties () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
-  const { data, error, loading } = UseFetch({ fetchFunction: SpecialtyServices.getAll, page, limit })
+  const { data: specialties, error, loading, reloadData } = UseFetch({ fetchFunction: SpecialtyServices.getAll, page, limit })
   const [specialty, setSpecialty] = useState({
     id: '',
     name: ''
@@ -32,7 +32,7 @@ function Specialties () {
   }
 
   const handleOpenModal = (modalOpenHandler, id) => {
-    const persons = data.data
+    const persons = specialties.data
     const filteredPerson = persons.find((element) => element.id === id)
     setSpecialty(filteredPerson)
     modalOpenHandler()
@@ -43,16 +43,22 @@ function Specialties () {
     setSpecialty({ ...specialty, [name]: value })
   }
 
-  const handleCreate = () => {
-    SpecialtyServices.create(specialty)
+  const handleCreate = async () => {
+    await SpecialtyServices.create(specialty)
+    createModal.handleClose()
+    reloadData()
   }
 
   const handleEdit = async () => {
-    SpecialtyServices.update(specialty.id, { specialty })
+    await SpecialtyServices.update(specialty.id, specialty)
+    editModal.handleClose()
+    reloadData()
   }
 
-  const handleDelete = () => {
-    SpecialtyServices.delete(specialty.id)
+  const handleDelete = async () => {
+    await SpecialtyServices.delete(specialty.id)
+    deleteModal.handleClose()
+    reloadData()
   }
 
   const handleSearch = (event) => {
@@ -79,14 +85,14 @@ function Specialties () {
         {error && <Error />}
         {loading && <Spinner />}
 
-        {!error && !loading && data && (
+        {!error && !loading && specialties && (
           <AdminTable pagination={{
             handlePageChange,
             handleLimitChange,
-            page: data.page,
-            totalPages: data.totalPages,
-            results: data.results,
-            totalResults: data.totalResults,
+            page: specialties.page,
+            totalPages: specialties.totalPages,
+            results: specialties.results,
+            totalResults: specialties.totalResults,
             limit
           }}
           >
@@ -97,7 +103,7 @@ function Specialties () {
             </TableHead>
             <TableBody>
               {
-                data.data
+                specialties.data
                   ?.filter(item => item.id.toLowerCase().includes(search.toLowerCase()))
                   ?.map((_specialty) => (
                     <tr
@@ -132,6 +138,8 @@ function Specialties () {
         <div className='flex flex-col gap-y-2 p-4'>
 
           <DisabledFormInput
+            id='id'
+            name='id'
             title='ID Specialty'
             value={specialty.id}
           />
@@ -139,6 +147,8 @@ function Specialties () {
           <div className='flex flex-col gap-3'>
 
             <DisabledFormInput
+              id='name'
+              name='name'
               title='Name'
               value={specialty.name}
             />
@@ -159,6 +169,8 @@ function Specialties () {
             <div className='flex flex-col gap-3'>
 
               <FormInputText
+                id='name'
+                name='name'
                 title='Name'
                 value={specialty.name}
                 handleDataChange={handleDataChange}
@@ -180,6 +192,8 @@ function Specialties () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Specialty'
               value={specialty.id}
             />
@@ -187,6 +201,8 @@ function Specialties () {
             <div className='flex flex-col gap-3'>
 
               <FormInputText
+                id='name'
+                name='name'
                 title='Name'
                 value={specialty.name}
                 handleDataChange={handleDataChange}
@@ -208,6 +224,8 @@ function Specialties () {
           <div className='flex flex-col gap-y-2 p-4'>
 
             <DisabledFormInput
+              id='id'
+              name='id'
               title='ID Specialty'
               value={specialty.id}
             />
@@ -215,6 +233,8 @@ function Specialties () {
             <div className='flex flex-col gap-3'>
 
               <DisabledFormInput
+                id='name'
+                name='name'
                 title='Name'
                 value={specialty.name}
               />
