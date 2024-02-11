@@ -15,7 +15,7 @@ function Modal ({ title, actionTitle, isOpen, onClose, action, children }) {
               </button>
             </div>
 
-            <div className='p-4 lg:overflow-y-scroll lg:max-h-[60vh]'>
+            <div className='p-4 scrollbar-sm lg:overflow-y-scroll lg:max-h-[60vh]'>
               {children}
             </div>
 

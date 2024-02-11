@@ -41,16 +41,16 @@ function PaginationBar ({ paginationObject }) {
         <div className='flex flex-row justify-center text-gray-600'>
           <p className=''>
             Showing
-            <span className='text-md font-bold'> {results} </span>
+            <span className='text-sm font-bold'> {results} </span>
             ({generateStartResults()} - {generateEndResults()})
             of
-            <span className='text-md font-bold'> {totalResults} </span>
+            <span className='text-sm font-bold'> {totalResults} </span>
             results
           </p>
         </div>
         <select
           id='results'
-          className='text-md bg-gray-300 mx-2 rounded-lg px-2 py-1'
+          className='text-sm bg-gray-300 mx-2 rounded-lg px-2 py-1'
           defaultValue={limit}
           onChange={_handleLimitChange}
         >
