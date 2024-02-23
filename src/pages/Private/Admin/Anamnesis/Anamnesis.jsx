@@ -1,7 +1,7 @@
 import { AdminLayout } from '@components/Layouts'
 import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@components/Tables/AdminTable'
 import { ButtonPrimary } from '@components/Buttons'
-import { DisabledText, PanelTitle } from '@components/Texts'
+import { CopyToClipboardText, PanelTitle } from '@components/Texts'
 import { Error } from '@components/Errors'
 import { FormInputText, FormTextArea, FormInputSelect, DisabledFormInput } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
@@ -140,7 +140,7 @@ function Anamnesis () {
       >
         <div className='flex flex-col gap-y-2 p-4'>
 
-          <DisabledText text={anamnesis.id} />
+          <CopyToClipboardText text={anamnesis.id} />
 
           <DisabledFormInput
             id='bloodType'
@@ -251,7 +251,7 @@ function Anamnesis () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledText text={anamnesis.id} />
+            <CopyToClipboardText text={anamnesis.id} />
 
             <FormInputSelect
               id='bloodType'
@@ -309,7 +309,7 @@ function Anamnesis () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledText text={anamnesis.id} />
+            <CopyToClipboardText text={anamnesis.id} />
 
             <DisabledFormInput
               id='bloodType'
