@@ -1,9 +1,9 @@
 import { AdminLayout } from '@components/Layouts'
 import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@components/Tables/AdminTable'
 import { ButtonPrimary } from '@components/Buttons'
-import { CopyToClipboardText, PanelTitle } from '@components/Texts'
+import { PanelTitle } from '@components/Texts'
 import { Error } from '@components/Errors'
-import { FormInputText, FormTextArea, FormInputSelect, DisabledFormInput } from '@components/Forms'
+import { FormInputText, FormTextArea, FormInputSelect, DisabledFormInput, DisabledFormTextCopy } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { SearchInput } from '@components/Inputs'
 import { Spinner } from '@components/Spinners'
@@ -140,7 +140,10 @@ function Anamnesis () {
       >
         <div className='flex flex-col gap-y-2 p-4'>
 
-          <CopyToClipboardText text={anamnesis.id} />
+          <DisabledFormTextCopy
+            title='Anamnesis ID'
+            value={anamnesis.id}
+          />
 
           <DisabledFormInput
             id='bloodType'
@@ -251,7 +254,10 @@ function Anamnesis () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <CopyToClipboardText text={anamnesis.id} />
+            <DisabledFormTextCopy
+              title='Anamnesis ID'
+              value={anamnesis.id}
+            />
 
             <FormInputSelect
               id='bloodType'
@@ -309,7 +315,10 @@ function Anamnesis () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <CopyToClipboardText text={anamnesis.id} />
+            <DisabledFormTextCopy
+              title='Anamnesis ID'
+              value={anamnesis.id}
+            />
 
             <DisabledFormInput
               id='bloodType'
