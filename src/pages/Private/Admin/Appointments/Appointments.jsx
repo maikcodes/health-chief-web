@@ -3,7 +3,7 @@ import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@comp
 import { ButtonPrimary } from '@components/Buttons'
 import { Error } from '@components/Errors'
 import { PanelTitle } from '@components/Texts'
-import { FormInputDate, FormInputText, FormInputTime, FormTextArea, FormInputSelect, DisabledFormInput } from '@components/Forms'
+import { FormInputDate, FormInputText, FormInputTime, FormTextArea, FormInputSelect, DisabledFormInput, DisabledFormTextCopy } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { SearchInput } from '@components/Inputs'
 import { Spinner } from '@components/Spinners'
@@ -147,28 +147,37 @@ function Appointments () {
         <div className='flex flex-col gap-y-2 p-4'>
           <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
               title='ID Appointment'
               value={appointment.id}
             />
 
-            <DisabledFormInput
-              id='idPreviousAppointment'
-              name='idPreviousAppointment'
-              title='ID Previous Appointment'
-              value={appointment.idPreviousAppointment ?? 'No previous appointment'}
-            />
+            {
+              appointment.idPreviousAppointment
+                ? <DisabledFormTextCopy
+                    id='idPreviousAppointment'
+                    name='idPreviousAppointment'
+                    title='ID Previous Appointment'
+                    value={appointment.idPreviousAppointment}
+                  />
+                : <DisabledFormInput
+                    id='idPreviousAppointment'
+                    name='idPreviousAppointment'
+                    title='ID Previous Appointment'
+                    value='No previous appointment'
+                  />
+            }
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='idPatient'
               name='idPatient'
               title='Patient'
               value={appointment.idPatient}
             />
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='idDoctor'
               name='idDoctor'
               title='Doctor'
@@ -310,7 +319,7 @@ function Appointments () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
               title='ID Appointment'
@@ -403,28 +412,37 @@ function Appointments () {
           <div className='flex flex-col gap-y-2 p-4'>
             <div className='flex flex-col lg:grid lg:grid-cols-2 gap-3'>
 
-              <DisabledFormInput
+              <DisabledFormTextCopy
                 id='id'
                 name='id'
                 title='ID Appointment'
                 value={appointment.id}
               />
 
-              <DisabledFormInput
-                id='idPreviousAppointment'
-                name='idPreviousAppointment'
-                title='ID Previous Appointment'
-                value={appointment.idPreviousAppointment ?? 'No previous appointment'}
-              />
+              {
+                appointment.idPreviousAppointment
+                  ? <DisabledFormTextCopy
+                      id='idPreviousAppointment'
+                      name='idPreviousAppointment'
+                      title='ID Previous Appointment'
+                      value={appointment.idPreviousAppointment}
+                    />
+                  : <DisabledFormInput
+                      id='idPreviousAppointment'
+                      name='idPreviousAppointment'
+                      title='ID Previous Appointment'
+                      value='No previous appointment'
+                    />
+              }
 
-              <DisabledFormInput
+              <DisabledFormTextCopy
                 id='idPatient'
                 name='idPatient'
                 title='Patient'
                 value={appointment.idPatient}
               />
 
-              <DisabledFormInput
+              <DisabledFormTextCopy
                 id='idDoctor'
                 name='idDoctor'
                 title='Doctor'
