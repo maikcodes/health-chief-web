@@ -1,9 +1,10 @@
 import { AdminLayout } from '@components/Layouts'
 import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@components/Tables/AdminTable'
 import { ButtonPrimary } from '@components/Buttons'
-import { Error } from '@components/Errors'
 import { PanelTitle } from '@components/Texts'
-import { FormInputText, DisabledFormInput } from '@components/Forms'
+import { Error } from '@components/Errors'
+
+import { FormInputText, DisabledFormInput, DisabledFormTextCopy } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { SearchInput } from '@components/Inputs'
 import { Spinner } from '@components/Spinners'
@@ -137,12 +138,7 @@ function Specialties () {
       >
         <div className='flex flex-col gap-y-2 p-4'>
 
-          <DisabledFormInput
-            id='id'
-            name='id'
-            title='ID Specialty'
-            value={specialty.id}
-          />
+          <DisabledFormTextCopy title='Specialty ID' value={specialty.id} />
 
           <div className='flex flex-col gap-3'>
 
@@ -191,10 +187,10 @@ function Specialties () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Specialty'
+              title='Specialty ID'
               value={specialty.id}
             />
 
@@ -223,10 +219,10 @@ function Specialties () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Specialty'
+              title='Specialty ID'
               value={specialty.id}
             />
 
