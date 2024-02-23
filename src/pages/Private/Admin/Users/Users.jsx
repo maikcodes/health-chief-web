@@ -1,7 +1,7 @@
 import { AdminLayout } from '@components/Layouts'
 import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@components/Tables'
 import { ButtonPrimary } from '@components/Buttons'
-import { DisabledText, PanelTitle } from '@components/Texts'
+import { PanelTitle } from '@components/Texts'
 import { Error } from '@components/Errors'
 import { Modal } from '@components/Dialogs'
 import { SearchInput } from '@components/Inputs'
@@ -10,7 +10,7 @@ import { Spinner } from '@components/Spinners'
 
 import { UseFetch, useModal, UsePagination } from '@hooks'
 import { useState } from 'react'
-import { DisabledFormInput, FormInputText } from '@components/Forms'
+import { DisabledFormInput, DisabledFormTextCopy, FormInputText } from '@components/Forms'
 
 function Users () {
   const { page, limit, handleLimitChange, handlePageChange } = UsePagination()
@@ -138,13 +138,13 @@ function Users () {
       >
         <div className='flex flex-col gap-y-2 p-4'>
 
-          <DisabledText text={user.id} />
+          <DisabledFormTextCopy title='User ID' value={user.id} />
 
           <div className='flex flex-col gap-3'>
             <DisabledFormInput
               id='email'
               name='email'
-              title='ID Card'
+              title='Email'
               value={user.email}
             />
           </div>
@@ -197,7 +197,7 @@ function Users () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
             <div className='flex flex-col gap-3'>
-              <FormInputText
+              <DisabledFormTextCopy
                 id='id'
                 name='id'
                 title='User ID'
@@ -233,13 +233,13 @@ function Users () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledText text={user.id} />
+            <DisabledFormTextCopy title='User ID' value={user.id} />
 
             <div className='flex flex-col gap-3'>
               <DisabledFormInput
                 id='email'
                 name='email'
-                title='ID Card'
+                title='Email'
                 value={user.email}
               />
             </div>
