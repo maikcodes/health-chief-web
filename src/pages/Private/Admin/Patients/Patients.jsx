@@ -2,7 +2,7 @@ import { AdminLayout } from '@components/Layouts'
 import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@components/Tables/AdminTable'
 import { ButtonPrimary } from '@components/Buttons'
 import { PanelTitle } from '@components/Texts'
-import { FormInputText, DisabledFormInput, FormInputSelect } from '@components/Forms'
+import { FormInputText, DisabledFormInput, FormInputSelect, DisabledFormTextCopy } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { SearchInput } from '@components/Inputs'
 import { Spinner } from '@components/Spinners'
@@ -136,10 +136,10 @@ function Patients () {
       >
         <div className='flex flex-col gap-y-2 p-4'>
 
-          <DisabledFormInput
+          <DisabledFormTextCopy
             id='id'
             name='id'
-            title='ID Patient'
+            title='Patient ID'
             value={patient.id}
           />
 
@@ -170,7 +170,7 @@ function Patients () {
               <FormInputText
                 id='id'
                 name='id'
-                title='ID Patient'
+                title='Patient ID'
                 value={patient.id}
                 handleDataChange={handleDataChange}
               />
@@ -202,10 +202,10 @@ function Patients () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Patient'
+              title='Patient ID'
               value={patient.id}
             />
 
@@ -238,10 +238,10 @@ function Patients () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Patient'
+              title='Patient ID'
               value={patient.id}
             />
 
