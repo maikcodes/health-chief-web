@@ -3,7 +3,7 @@ import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@comp
 import { ButtonPrimary } from '@components/Buttons'
 import { Error } from '@components/Errors'
 import { PanelTitle } from '@components/Texts'
-import { FormInputText, DisabledFormInput } from '@components/Forms'
+import { FormInputText, DisabledFormTextCopy } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { SearchInput } from '@components/Inputs'
 import { Spinner } from '@components/Spinners'
@@ -98,8 +98,8 @@ function PersonsRoles () {
           }}
           >
             <TableHead>
-              <TableHeader>id person</TableHeader>
-              <TableHeader>id role</TableHeader>
+              <TableHeader>Person ID</TableHeader>
+              <TableHeader>Role ID</TableHeader>
               <TableHeader>settings</TableHeader>
             </TableHead>
             <TableBody>
@@ -138,26 +138,26 @@ function PersonsRoles () {
       >
         <div className='flex flex-col gap-y-2 p-4'>
 
-          <DisabledFormInput
+          <DisabledFormTextCopy
             id='id'
             name='id'
-            title='ID Person Role'
+            title='Person Role ID'
             value={personRole.id}
           />
 
           <div className='flex flex-col gap-3'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='idPerson'
               name='idPerson'
-              title='ID Person'
+              title='Person ID'
               value={personRole.idPerson}
             />
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='idRole'
               name='idRole'
-              title='ID Role'
+              title='Role ID'
               value={personRole.idRole}
             />
 
@@ -179,7 +179,7 @@ function PersonsRoles () {
               <FormInputText
                 id='idPerson'
                 name='idPerson'
-                title='ID Person'
+                title='Person ID'
                 value={personRole.idPerson}
                 handleDataChange={handleDataChange}
               />
@@ -187,7 +187,7 @@ function PersonsRoles () {
               <FormInputText
                 id='idRole'
                 name='idRole'
-                title='ID Role'
+                title='Role ID'
                 value={personRole.idRole}
                 handleDataChange={handleDataChange}
               />
@@ -207,17 +207,17 @@ function PersonsRoles () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Person Role'
+              title='Person Role ID'
               value={personRole.id}
             />
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='idPerson'
               name='idPerson'
-              title='ID Person'
+              title='Person ID'
               value={personRole.idPerson}
             />
 
@@ -226,7 +226,7 @@ function PersonsRoles () {
               <FormInputText
                 id='idRole'
                 name='idRole'
-                title='ID Role'
+                title='Role ID'
                 value={personRole.idRole}
                 handleDataChange={handleDataChange}
               />
@@ -246,26 +246,26 @@ function PersonsRoles () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Person Role'
+              title='Person Role ID'
               value={personRole.id}
             />
 
             <div className='flex flex-col gap-3'>
 
-              <DisabledFormInput
+              <DisabledFormTextCopy
                 id='idPerson'
                 name='idPerson'
-                title='ID Person'
+                title='Person ID'
                 value={personRole.idPerson}
               />
 
-              <DisabledFormInput
+              <DisabledFormTextCopy
                 id='idRole'
                 name='idRole'
-                title='ID Role'
+                title='Role ID'
                 value={personRole.idRole}
               />
 
