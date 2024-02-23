@@ -1,4 +1,5 @@
 export { default as DisabledFormInput } from './DisabledFormInput'
+export { default as DisabledFormTextCopy } from './DisabledFormTextCopy'
 export { default as FormInputDate } from './FormInputDate'
 export { default as FormInputSelect } from './FormInputSelect'
 export { default as FormInputText } from './FormInputText'
