@@ -197,7 +197,7 @@ function Anamnesis () {
             <FormInputText
               id='id'
               name='id'
-              title='ID'
+              title='Anamnesis ID'
               value={anamnesis.id}
               handleDataChange={handleDataChange}
             />
