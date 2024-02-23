@@ -2,9 +2,9 @@ import { AdminLayout } from '@components/Layouts'
 import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@components/Tables/AdminTable'
 import { AvatarImage, AvatarImageLabel } from '@components/Images'
 import { ButtonPrimary } from '@components/Buttons'
-import { DisabledText, PanelTitle } from '@components/Texts'
+import { PanelTitle } from '@components/Texts'
 import { Error } from '@components/Errors'
-import { FormInputDate, FormInputText, FormInputSelect, DisabledFormInput } from '@components/Forms'
+import { FormInputDate, FormInputText, FormInputSelect, DisabledFormInput, DisabledFormTextCopy } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { PersonServices } from '@services/Person'
 import { SearchInput } from '@components/Inputs'
@@ -167,7 +167,7 @@ function Persons () {
       >
         <div className='flex flex-col gap-y-2 p-4'>
 
-          <DisabledText text={person.id} />
+          <DisabledFormTextCopy title='Person ID' value={person.id} />
 
           <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
             <DisabledFormInput
@@ -330,7 +330,7 @@ function Persons () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledText text={person.id} />
+            <DisabledFormTextCopy title='Person ID' value={person.id} />
 
             <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
               <FormInputText
@@ -435,7 +435,7 @@ function Persons () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledText text={person.id} />
+            <DisabledFormTextCopy title='Person ID' value={person.id} />
 
             <div className='flex flex-col lg:grid lg:grid-cols-3 gap-3'>
               <DisabledFormInput
