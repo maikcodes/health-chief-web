@@ -3,7 +3,7 @@ import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@comp
 import { ButtonPrimary } from '@components/Buttons'
 import { Error } from '@components/Errors'
 import { PanelTitle } from '@components/Texts'
-import { FormInputText, DisabledFormInput } from '@components/Forms'
+import { FormInputText, DisabledFormInput, DisabledFormTextCopy } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { SearchInput } from '@components/Inputs'
 import { Spinner } from '@components/Spinners'
@@ -137,10 +137,10 @@ function Roles () {
       >
         <div className='flex flex-col gap-y-2 p-4'>
 
-          <DisabledFormInput
+          <DisabledFormTextCopy
             id='id'
             name='id'
-            title='ID Role'
+            title='Role ID'
             value={role.id}
           />
 
@@ -191,10 +191,10 @@ function Roles () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Role'
+              title='Role ID'
               value={role.id}
             />
 
@@ -223,10 +223,10 @@ function Roles () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Role'
+              title='Role ID'
               value={role.id}
             />
 
