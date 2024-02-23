@@ -12,7 +12,8 @@ function CopyToClipboardText ({ text }) {
     }
   }
 
-  const handleCopyText = async () => {
+  const handleCopyText = async (event) => {
+    event.preventDefault()
     await copyToClipboardText(text)
     setIsCopied(true)
 
