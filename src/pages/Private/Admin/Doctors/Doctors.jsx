@@ -3,7 +3,7 @@ import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@comp
 import { ButtonPrimary } from '@components/Buttons'
 import { Error } from '@components/Errors'
 import { PanelTitle } from '@components/Texts'
-import { FormInputText, DisabledFormInput } from '@components/Forms'
+import { FormInputText, DisabledFormTextCopy } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { SearchInput } from '@components/Inputs'
 import { Spinner } from '@components/Spinners'
@@ -136,19 +136,19 @@ function Doctors () {
       >
         <div className='flex flex-col gap-y-2 p-4'>
 
-          <DisabledFormInput
+          <DisabledFormTextCopy
             id='id'
             name='id'
-            title='ID Doctor'
+            title='Doctor ID'
             value={doctor.id}
           />
 
           <div className='flex flex-col gap-3'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='idSpecialty'
               name='idSpecialty'
-              title='ID Specialty'
+              title='Specialty ID'
               value={doctor.idSpecialty}
             />
 
@@ -170,7 +170,7 @@ function Doctors () {
               <FormInputText
                 id='id'
                 name='id'
-                title='ID Doctor'
+                title='Doctor ID'
                 value={doctor.id}
                 handleDataChange={handleDataChange}
               />
@@ -178,7 +178,7 @@ function Doctors () {
               <FormInputText
                 id='idSpecialty'
                 name='idSpecialty'
-                title='ID Specialty'
+                title='Specialty ID'
                 value={doctor.idSpecialty}
                 handleDataChange={handleDataChange}
               />
@@ -198,10 +198,10 @@ function Doctors () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Doctor'
+              title='Doctor ID'
               value={doctor.id}
             />
 
@@ -210,7 +210,7 @@ function Doctors () {
               <FormInputText
                 id='idSpecialty'
                 name='idSpecialty'
-                title='ID Specialty'
+                title='Specialty ID'
                 value={doctor.idSpecialty}
                 handleDataChange={handleDataChange}
               />
@@ -230,19 +230,19 @@ function Doctors () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Doctor'
+              title='Doctor ID'
               value={doctor.id}
             />
 
             <div className='flex flex-col gap-3'>
 
-              <DisabledFormInput
+              <DisabledFormTextCopy
                 id='idSpecialty'
                 name='idSpecialty'
-                title='ID Specialty'
+                title='Specialty ID'
                 value={doctor.idSpecialty}
               />
 
