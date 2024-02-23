@@ -150,7 +150,7 @@ function Appointments () {
             <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Appointment'
+              title='Appointment ID'
               value={appointment.id}
             />
 
@@ -159,13 +159,13 @@ function Appointments () {
                 ? <DisabledFormTextCopy
                     id='idPreviousAppointment'
                     name='idPreviousAppointment'
-                    title='ID Previous Appointment'
+                    title='Previous Appointment ID'
                     value={appointment.idPreviousAppointment}
                   />
                 : <DisabledFormInput
                     id='idPreviousAppointment'
                     name='idPreviousAppointment'
-                    title='ID Previous Appointment'
+                    title='Previous Appointment ID'
                     value='No previous appointment'
                   />
             }
@@ -173,14 +173,14 @@ function Appointments () {
             <DisabledFormTextCopy
               id='idPatient'
               name='idPatient'
-              title='Patient'
+              title='Patient ID'
               value={appointment.idPatient}
             />
 
             <DisabledFormTextCopy
               id='idDoctor'
               name='idDoctor'
-              title='Doctor'
+              title='Doctor ID'
               value={appointment.idDoctor}
             />
 
@@ -239,7 +239,7 @@ function Appointments () {
               <FormInputText
                 id='idPreviousAppointment'
                 name='idPreviousAppointment'
-                title='ID Previous Appointment'
+                title='Previous Appointment ID'
                 value={appointment.idPreviousAppointment}
                 handleDataChange={handleDataChange}
               />
@@ -247,7 +247,7 @@ function Appointments () {
               <FormInputText
                 id='idPatient'
                 name='idPatient'
-                title='Patient'
+                title='Patient ID'
                 value={appointment.idPatient}
                 handleDataChange={handleDataChange}
               />
@@ -255,7 +255,7 @@ function Appointments () {
               <FormInputText
                 id='idDoctor'
                 name='idDoctor'
-                title='Doctor'
+                title='Doctor ID'
                 value={appointment.idDoctor}
                 handleDataChange={handleDataChange}
               />
@@ -322,14 +322,14 @@ function Appointments () {
             <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Appointment'
+              title='Appointment ID'
               value={appointment.id}
             />
 
             <FormInputText
               id='idPreviousAppointment'
               name='idPreviousAppointment'
-              title='ID Previous Appointment'
+              title='Previous Appointment ID'
               value={appointment.idPreviousAppointment}
               handleDataChange={handleDataChange}
             />
@@ -339,7 +339,7 @@ function Appointments () {
               <FormInputText
                 id='idPatient'
                 name='idPatient'
-                title='Patient'
+                title='Patient ID'
                 value={appointment.idPatient}
                 handleDataChange={handleDataChange}
               />
@@ -347,7 +347,7 @@ function Appointments () {
               <FormInputText
                 id='idDoctor'
                 name='idDoctor'
-                title='Doctor'
+                title='Doctor ID'
                 value={appointment.idDoctor}
                 handleDataChange={handleDataChange}
               />
@@ -415,7 +415,7 @@ function Appointments () {
               <DisabledFormTextCopy
                 id='id'
                 name='id'
-                title='ID Appointment'
+                title='Appointment ID'
                 value={appointment.id}
               />
 
@@ -424,13 +424,13 @@ function Appointments () {
                   ? <DisabledFormTextCopy
                       id='idPreviousAppointment'
                       name='idPreviousAppointment'
-                      title='ID Previous Appointment'
+                      title='Previous Appointment ID'
                       value={appointment.idPreviousAppointment}
                     />
                   : <DisabledFormInput
                       id='idPreviousAppointment'
                       name='idPreviousAppointment'
-                      title='ID Previous Appointment'
+                      title='Previous Appointment ID'
                       value='No previous appointment'
                     />
               }
@@ -438,14 +438,14 @@ function Appointments () {
               <DisabledFormTextCopy
                 id='idPatient'
                 name='idPatient'
-                title='Patient'
+                title='Patient ID'
                 value={appointment.idPatient}
               />
 
               <DisabledFormTextCopy
                 id='idDoctor'
                 name='idDoctor'
-                title='Doctor'
+                title='Doctor ID'
                 value={appointment.idDoctor}
               />
 
