@@ -3,7 +3,7 @@ import { AdminTable, RowOptions, TableBody, TableHead, TableHeader } from '@comp
 import { ButtonPrimary } from '@components/Buttons'
 import { Error } from '@components/Errors'
 import { PanelTitle } from '@components/Texts'
-import { FormInputDate, FormInputText, FormTextArea, DisabledFormInput } from '@components/Forms'
+import { FormInputDate, FormInputText, FormTextArea, DisabledFormInput, DisabledFormTextCopy } from '@components/Forms'
 import { Modal } from '@components/Dialogs'
 import { SearchInput } from '@components/Inputs'
 import { Spinner } from '@components/Spinners'
@@ -144,10 +144,10 @@ function PhysicalExaminations () {
       >
         <div className='flex flex-col gap-y-2 p-4'>
 
-          <DisabledFormInput
+          <DisabledFormTextCopy
             id='id'
             name='id'
-            title='ID Physical Examination'
+            title='Physical Examination ID'
             value={physicalExamination.id}
           />
 
@@ -345,10 +345,10 @@ function PhysicalExaminations () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Physical Examination'
+              title='Physical Examination ID'
               value={physicalExamination.id}
             />
 
@@ -448,10 +448,10 @@ function PhysicalExaminations () {
         <form action=''>
           <div className='flex flex-col gap-y-2 p-4'>
 
-            <DisabledFormInput
+            <DisabledFormTextCopy
               id='id'
               name='id'
-              title='ID Physical Examination'
+              title='Physical Examination ID'
               value={physicalExamination.id}
             />
 
