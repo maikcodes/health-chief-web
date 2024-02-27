@@ -1,25 +1,30 @@
+import { Auth } from '@services/Auth'
+import { PrivateRoutes } from '@models/Routes'
 import { useRef, useState } from 'react'
-import { Auth } from '../../services/Auth'
+import { FormInputText } from '@components/Forms'
+import { ButtonPrimary } from '@components/Buttons'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { createUser } from '../../redux/states/user'
-import { useNavigate } from 'react-router-dom'
-import { PrivateRoutes } from '../../models/routes'
 
 function Login () {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const form = useRef()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      Auth.login({ email, password })
-      dispatch(createUser({ email, password }))
-      navigate(`/${PrivateRoutes.PRIVATE}`, { replace: true })
-    } catch (error) {
+      const token = await Auth.login({ email, password })
 
+      if (token) {
+        navigate(`/${PrivateRoutes.PRIVATE}`)
+        dispatch(createUser({ email, password, token }))
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -31,19 +36,30 @@ function Login () {
     setPassword(event.target.value)
   }
   return (
-    <section>
-      <form ref={form} action='#' method='post' onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor='email'>Email</label>
-          <input type='text' name='email' id='email' onChange={handleEmailChange} value={email} />
+    <main className='m-0 p-0 w-screen h-screen flex justify-center items-center from-indigo-300 via-indigo-600 to bg-indigo-800 bg-gradient-to-b'>
+      <div className='flex flex-row gap-8 items-center w-full justify-center'>
+        <div className='bg-white rounded-lg shadow-lg shadow-gray-700 p-6 w-[350px]'>
+          <form ref={form} action='#' method='post' onSubmit={handleSubmit} className='flex flex-col gap-3'>
+            <FormInputText
+              title='Email'
+              name='email'
+              id='email'
+              handleDataChange={handleEmailChange}
+              value={email}
+            />
+            <FormInputText
+              title='Password'
+              name='password'
+              id='password'
+              handleDataChange={handlePasswordChange}
+              value={password}
+            />
+            <ButtonPrimary text='Login' type='submit' />
+          </form>
         </div>
-        <div>
-          <label htmlFor='password'>Password </label>
-          <input type='text' name='password' id='password' onChange={handlePasswordChange} value={password} />
-        </div>
-        <input type='submit' value='Login' />
-      </form>
-    </section>
+
+      </div>
+    </main>
   )
 }
 

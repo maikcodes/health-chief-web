@@ -8,7 +8,8 @@ export default defineConfig({
     alias: {
       '@components': '/src/components',
       '@services': '/src/services',
-      '@hooks': '/src/hooks'
+      '@hooks': '/src/hooks',
+      '@models': '/src/models'
     }
   }
 })
