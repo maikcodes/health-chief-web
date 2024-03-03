@@ -1,14 +1,16 @@
-import { useSelector } from 'react-redux'
-// import { AppStore } from '../redux/store'
 import { Outlet, Navigate } from 'react-router-dom'
 import { PublicRoutes } from '../models/routes'
+import useAuth from '@hooks/useAuth'
 
 function AuthGuard () {
-  // const userState = useSelector(store => store.user)
-  // return userState.id ? true : false
-  const userState = true
-  return userState ? <Outlet /> : <Navigate replace to={PublicRoutes.LOGIN} />
-  // return <Navigate replace to={PublicRoutes.LOGIN} />
+  const { isAuthenticated, loading } = useAuth()
+  console.log('🚀 ~ AuthGuard ~ isAuthenticated:', isAuthenticated())
+
+  if (loading) {
+    return null
+  }
+
+  return isAuthenticated() ? <Outlet /> : <Navigate to={PublicRoutes.LOGIN} />
 }
 
 export default AuthGuard

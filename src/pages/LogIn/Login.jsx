@@ -1,31 +1,17 @@
-import { Auth } from '@services/Auth'
-import { PrivateRoutes } from '@models/Routes'
 import { useRef, useState } from 'react'
 import { FormInputText } from '@components/Forms'
 import { ButtonPrimary } from '@components/Buttons'
-import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { createUser } from '../../redux/states/user'
+import useAuth from '@hooks/useAuth'
 
 function Login () {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const form = useRef()
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const { logIn } = useAuth()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    try {
-      const token = await Auth.login({ email, password })
-
-      if (token) {
-        navigate(`/${PrivateRoutes.PRIVATE}`)
-        dispatch(createUser({ email, password, token }))
-      }
-    } catch (error) {
-      console.log(error)
-    }
+    await logIn({ email, password })
   }
 
   const handleEmailChange = (event) => {

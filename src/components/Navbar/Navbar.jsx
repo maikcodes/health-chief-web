@@ -1,8 +1,10 @@
+import useAuth from '@hooks/useAuth'
 import appIcon from '../../../public/favicon.svg'
 import { BiSolidDownArrow } from 'react-icons/bi'
 import { BsFillCalendarEventFill, BsFillChatDotsFill, BsFillBellFill } from 'react-icons/bs'
 
 function Navbar () {
+  const { user } = useAuth()
   return (
     <header
       id='navbar' name='navbar'
@@ -41,12 +43,12 @@ function Navbar () {
 
                 <div>
                   <h1 className='hidden md:block md:text-sm md:font-semibold'>
-                    Willy Romero
+                    {user.id}
                   </h1>
 
                   <div className='md:flex md:justify-end'>
                     <p className='border-[1px] text-biscay-800 font-bold rounded-xl px-2 py-[1px] text-xs border-biscay-600 bg-biscay-200'>
-                      Admin
+                      {user.roles[0] || 'user'}
                     </p>
                   </div>
                 </div>
